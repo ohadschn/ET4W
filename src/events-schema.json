@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "id": "https://github.com/ohadschn/ET4W/src/events-schema.json",
+
+  "definitions": {
+    "identifier": {
+      "type": "string",
+      "pattern": "^([a-zA-Z_][a-zA-Z0-9-_]*)*$"
+    },
+    "identifier-array": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/identifier" }
+    },
+    "event": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "integer" },
+        "name": { "$ref": "#/definitions/identifier" },
+        "level": {
+          "type": "string",
+          "enum": [ "Verbose", "Informational", "Warning", "Error", "Critical", "LogAlways" ]
+        },
+        "message": { "type": "string" },
+        "keywords": { "$ref": "#/definitions/identifier-array" },
+        "task": { "$ref": "#/definitions/identifier" },
+        "opCode": {
+          "type": "string",
+          "enum": [ "Info", "Start", "Stop", "DataCollectionStart", "DataCollectionStop", "Extension", "Reply", "Resume", "Suspend", "Send", "Receive" ]
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ]
+    }
+  },
+
+  "type": "object",
+  "properties": {
+    "class": { "$ref": "#/definitions/identifier" },
+    "sourceName": { "type": "string" },
+    "tasks": { "$ref": "#/definitions/identifier-array" },
+    "keywords": {
+      "allOf": [
+        { "$ref": "#/definitions/identifier-array" },
+        { "maxItems": 44 }
+      ] 
+    },
+    "events": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/event" }
+    }
+  },
+  "required": [
+    "class",
+    "sourceName",
+    "events"
+  ]
+}
