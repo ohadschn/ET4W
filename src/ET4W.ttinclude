@@ -1,11 +1,14 @@
+<#@ assembly name="System.Core"#>
 <#@ assembly name="System.Xml"#>
 <#@ assembly name="System.Runtime.Serialization"#>
+<#@ import namespace="System.Linq" #>
 <#@ import namespace="System.IO" #>
 <#@ import namespace="System.Text"#>
 <#@ import namespace="System.Runtime.Serialization" #>
 <#@ import namespace="System.Runtime.Serialization.Json" #>
 <#@ import namespace="System.Diagnostics.Tracing" #>
 <#+
+const string KeywordsClassName = "Keywords";
 private void WriteEventSource(string eventsFile, string nameSpace, Type baseType = null)
 {
 	baseType = baseType ?? typeof(EventSource);
@@ -17,6 +20,7 @@ private void WriteEventSource(string eventsFile, string nameSpace, Type baseType
     {
 		eventDefinitions = (EventDefinitions)dcjs.ReadObject(eventsStream);
     }
+	var eventSourceClassName = eventDefinitions.Class + "EventSource";
 #>
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -27,11 +31,61 @@ using System.Net;
 
 namespace <#= nameSpace #>
 {
-	public class <#= eventDefinitions.Class #>Events
+	public partial class <#= eventDefinitions.Class #>Events
 	{
-		private sealed class <#= "" #>EventSource : <#= baseType.FullName #>
-		{
-		}
+<#+ 
+		foreach (var evnt in eventDefinitions.Events)
+{ #>
+			public void <#= evnt.Name #>()
+			{
+				<#= eventSourceClassName #>.Log.<#= evnt.Name #>();
+			}
+<#+ } #>
+
+			[EventSource(Name = "<#= eventDefinitions.SourceName #>")]
+			private sealed class <#= eventSourceClassName #> : <#= baseType.FullName #>
+			{
+				public static readonly <#= eventSourceClassName #> Log = new  <#= eventSourceClassName #>();
+
+				public sealed class Keywords
+				{
+					private Keywords() {}
+<#+ 
+	int keywordValue = 1;
+	foreach (var keyword in eventDefinitions.Keywords)
+    { #>
+					public const EventKeywords <#= keyword #> = (EventKeywords) <#= keywordValue #>;
+<#+ 
+	keywordValue *= 2;
+	} #>
+				}
+
+				public sealed class Tasks
+				{
+					private Tasks() {}
+<#+ 
+	int taskValue = 1;
+	foreach (var keyword in eventDefinitions.Tasks)
+    { #>
+					public const EventTask <#= keyword #> = (EventTask) <#= taskValue++ #>;
+<#+ } #>
+				}
+
+<#+ 
+	foreach (var evnt in eventDefinitions.Events)
+	{ #>
+				[Event(
+					<#= evnt.Id #>, 
+					Level=<#= nameof(EventLevel) + "." + evnt.Level #>,
+					Message="<#= evnt.Message == null ? null : evnt.Message.Replace("\"", "\\\"") #>",
+					Keywords=<#= String.Join(" | ", evnt.Keywords.Select(k => KeywordsClassName + "." + k)) #>,
+					Task=Tasks.<#= evnt.Task #>,
+					Opcode=EventOpcode.<#= evnt.Opcode #>)]
+				public void <#= evnt.Name #>()
+				{
+				}
+<#+ } #>
+			}
 	}
 }
 <#+   
@@ -69,7 +123,7 @@ class EventDefinition
 	[DataMember(Name="level")]
     private string LevelValue { get; set; }
 
-    public EventLevel Level { get { return (EventLevel)Enum.Parse(typeof(EventLevel), LevelValue);} }
+    public EventLevel Level { get { return LevelValue == null ? EventLevel.Informational : (EventLevel)Enum.Parse(typeof(EventLevel), LevelValue);} }
 
 	[DataMember(Name="message")]
     public string Message { get; private set; }
