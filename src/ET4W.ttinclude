@@ -1,0 +1,88 @@
+<#@ assembly name="System.Xml"#>
+<#@ assembly name="System.Runtime.Serialization"#>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Text"#>
+<#@ import namespace="System.Runtime.Serialization" #>
+<#@ import namespace="System.Runtime.Serialization.Json" #>
+<#@ import namespace="System.Diagnostics.Tracing" #>
+<#+
+private void WriteEventSource(string eventsFile, string nameSpace, Type baseType = null)
+{
+	baseType = baseType ?? typeof(EventSource);
+	EventDefinitions eventDefinitions = null;
+	var dcjs = new DataContractJsonSerializer(typeof(EventDefinitions));
+
+	//we don't use FileStream directly below in order to support UTF BOM headers
+	using (var eventsStream = new MemoryStream(Encoding.UTF8.GetBytes(File.ReadAllText(eventsFile))))
+    {
+		eventDefinitions = (EventDefinitions)dcjs.ReadObject(eventsStream);
+    }
+#>
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.Tracing;
+using System.Globalization;
+using System.Linq;
+using System.Net;
+
+namespace <#= nameSpace #>
+{
+	public class <#= eventDefinitions.Class #>Events
+	{
+		private sealed class <#= "" #>EventSource : <#= baseType.FullName #>
+		{
+		}
+	}
+}
+<#+   
+	
+} //WriteEventSource
+
+[DataContract]
+class EventDefinitions
+{
+	[DataMember(Name="class", IsRequired=true)]
+    public string Class { get; private set; }
+    
+	[DataMember(Name="sourceName", IsRequired=true)]
+	public string SourceName { get; private set; }
+	
+	[DataMember(Name="tasks")]
+	public string[] Tasks {get; private set;}
+	
+	[DataMember(Name="keywords")]
+	public string[] Keywords {get; private set;}
+ 
+	[DataMember(Name="events", IsRequired=true)]
+	public EventDefinition[] Events {get; private set;}
+}
+
+[DataContract]
+class EventDefinition
+{
+	[DataMember(Name="id", IsRequired=true)]
+    public int Id { get; private set; }
+	
+	[DataMember(Name="name", IsRequired=true)]
+    public string Name { get; private set; }
+
+	[DataMember(Name="level")]
+    private string LevelValue { get; set; }
+
+    public EventLevel Level { get { return (EventLevel)Enum.Parse(typeof(EventLevel), LevelValue);} }
+
+	[DataMember(Name="message")]
+    public string Message { get; private set; }
+
+	[DataMember(Name="keywords")]
+    public string[] Keywords { get; private set; }
+
+	[DataMember(Name="task")]
+    public string Task { get; private set; }
+
+	[DataMember(Name="opcode")]
+    private string OpcodeValue { get; set; }
+
+    public EventOpcode Opcode { get { return (EventOpcode)Enum.Parse(typeof(EventOpcode), OpcodeValue); } }
+}
+#>
