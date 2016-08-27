@@ -24,7 +24,7 @@
         "message": { "type": "string" },
         "keywords": { "$ref": "#/definitions/identifier-array" },
         "task": { "$ref": "#/definitions/identifier" },
-        "opCode": {
+        "opcode": {
           "type": "string",
           "enum": [ "Info", "Start", "Stop", "DataCollectionStart", "DataCollectionStop", "Extension", "Reply", "Resume", "Suspend", "Send", "Receive" ]
         }
