@@ -77,7 +77,7 @@ namespace <#= nameSpace #>
 				[Event(
 					<#= evnt.Id #>, 
 					Level=<#= nameof(EventLevel) + "." + evnt.Level #>,
-					Message="<#= evnt.Message == null ? null : evnt.Message.Replace("\"", "\\\"") #>",
+					Message="<#= evnt.Message == null ? null : evnt.Message.Replace("\\", "\\\\").Replace("\"", "\\\"")#>",
 					Keywords=<#= String.Join(" | ", evnt.Keywords.Select(k => KeywordsClassName + "." + k)) #>,
 					Task=Tasks.<#= evnt.Task #>,
 					Opcode=EventOpcode.<#= evnt.Opcode #>)]
