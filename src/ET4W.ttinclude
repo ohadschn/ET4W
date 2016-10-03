@@ -76,11 +76,19 @@ namespace <#= nameSpace #>
 	{ #>
 				[Event(
 					<#= evnt.Id #>, 
-					Level=<#= nameof(EventLevel) + "." + evnt.Level #>,
-					Message="<#= evnt.Message == null ? null : evnt.Message.Replace("\\", "\\\\").Replace("\"", "\\\"")#>",
+<#+ if (evnt.Keywords != null && evnt.Keywords.Length > 0) 
+	{ #>
 					Keywords=<#= String.Join(" | ", evnt.Keywords.Select(k => KeywordsClassName + "." + k)) #>,
+<#+ } #>
+<#+ if (evnt.Task != null)
+	{ #>
 					Task=Tasks.<#= evnt.Task #>,
-					Opcode=EventOpcode.<#= evnt.Opcode #>)]
+<#+ } #>
+<#+ if (evnt.Opcode != null)
+	{ #>
+					Opcode=EventOpcode.<#= evnt.Opcode #>,
+<#+ } #>					Level=<#= nameof(EventLevel) + "." + evnt.Level #>,
+					Message="<#= evnt.Message == null ? null : evnt.Message.Replace("\\", "\\\\").Replace("\"", "\\\"")#>")]
 				public void <#= evnt.Name #>()
 				{
 				}
@@ -123,7 +131,7 @@ class EventDefinition
 	[DataMember(Name="level")]
     private string LevelValue { get; set; }
 
-    public EventLevel Level { get { return LevelValue == null ? EventLevel.Informational : (EventLevel)Enum.Parse(typeof(EventLevel), LevelValue);} }
+    public EventLevel Level { get { return (LevelValue == null) ? EventLevel.Informational : (EventLevel)Enum.Parse(typeof(EventLevel), LevelValue);} }
 
 	[DataMember(Name="message")]
     public string Message { get; private set; }
@@ -137,6 +145,6 @@ class EventDefinition
 	[DataMember(Name="opcode")]
     private string OpcodeValue { get; set; }
 
-    public EventOpcode Opcode { get { return (EventOpcode)Enum.Parse(typeof(EventOpcode), OpcodeValue); } }
+    public EventOpcode? Opcode { get { return (OpcodeValue == null) ? null : (EventOpcode?)Enum.Parse(typeof(EventOpcode), OpcodeValue); } }
 }
 #>
