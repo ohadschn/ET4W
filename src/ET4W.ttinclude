@@ -20,6 +20,7 @@ private void WriteEventSource(string eventsFile, string nameSpace, Type baseType
     {
 		eventDefinitions = (EventDefinitions)dcjs.ReadObject(eventsStream);
     }
+	ValidateEventDefinitions(eventDefinitions);
 	var eventSourceClassName = eventDefinitions.Class + "EventSource";
 #>
 using System;
@@ -100,6 +101,23 @@ namespace <#= nameSpace #>
 	
 } //WriteEventSource
 
+private void ValidateEventDefinitions(EventDefinitions eventDefinitions)
+{
+	foreach (var evnt in eventDefinitions.Events)
+	{
+		var unknownKeywords = evnt.Keywords.Except(eventDefinitions.Keywords).ToArray();
+		if (unknownKeywords.Length > 0)
+		{
+			throw new ArgumentException("Unknown keywords (not defined in the top-most 'keywords' property): " + String.Join(",", unknownKeywords));
+		}
+
+		if (evnt.Task != null && !eventDefinitions.Tasks.Contains(evnt.Task))
+		{
+			throw new ArgumentException("Unknown task (not defined in the top-most 'tasks' property): " + evnt.Task);
+		}
+	}
+}
+
 [DataContract]
 class EventDefinitions
 {
@@ -109,14 +127,29 @@ class EventDefinitions
 	[DataMember(Name="sourceName", IsRequired=true)]
 	public string SourceName { get; private set; }
 	
+	string[] m_tasks;
 	[DataMember(Name="tasks")]
-	public string[] Tasks {get; private set;}
+	public string[] Tasks 
+	{
+		get			{return m_tasks ?? new String[0]; }
+		private set {m_tasks = value; }
+	}
 	
+	string[] m_keywords;
 	[DataMember(Name="keywords")]
-	public string[] Keywords {get; private set;}
+	public string[] Keywords 
+	{
+		get			{return m_keywords ?? new String[0]; } 
+		private set {m_keywords = value; }
+	}
  
+	EventDefinition[] m_events;
 	[DataMember(Name="events", IsRequired=true)]
-	public EventDefinition[] Events {get; private set;}
+	public EventDefinition[] Events 
+	{
+		get			{return m_events ?? new EventDefinition[0]; } 
+		private set {m_events = value; }
+	}
 }
 
 [DataContract]
@@ -136,8 +169,13 @@ class EventDefinition
 	[DataMember(Name="message")]
     public string Message { get; private set; }
 
+	string[] m_keywords;
 	[DataMember(Name="keywords")]
-    public string[] Keywords { get; private set; }
+    public string[] Keywords 
+	{ 
+		get			{return m_keywords ?? new String[0]; } 
+		private set {m_keywords = value; }
+	}
 
 	[DataMember(Name="task")]
     public string Task { get; private set; }
