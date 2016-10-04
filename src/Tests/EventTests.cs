@@ -2,6 +2,7 @@
 using System.Reflection;
 using Tests.EventSources;
 using System.Diagnostics.Tracing;
+using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Utility;
 
 namespace Tests
 {
@@ -27,6 +28,12 @@ namespace Tests
             {
                 Assert.AreEqual(expectedOpcode, eventAttribute.Opcode, "Mismatched event opcode");
             }
+        }
+
+        [TestMethod]
+        public void AnalyzeEventSource()
+        {
+            EventSourceAnalyzer.InspectAll(TestsEventSource.Log);
         }
 
         [TestMethod]

@@ -95,6 +95,7 @@ namespace <#= nameSpace #>
 			Message="<#= evnt.Message == null ? null : evnt.Message.Replace("\\", "\\\\").Replace("\"", "\\\"")#>")]
 		public void <#= evnt.Name #>()
 		{
+			WriteEvent(<#= evnt.Id #>);
 		}
 
 <#+ } #>
