@@ -1,0 +1,33 @@
+﻿{
+  "$schema": "../../events-schema.json",
+  "class": "Tests",
+  "sourceName": "OS-Test-Foo",
+  "tasks": [ "Foo", "Boo" ],
+  "keywords": [ "Baz", "Faz", "Raz" ],
+  "events": [
+    {
+      "id": 1,
+      "name": "NoKeyWords",
+      "level": "Informational",
+      "message": "Event with no keywords",
+      "task": "Foo",
+      "opcode": "Info"
+    },
+    {
+      "id": 2,
+      "name": "NoTask",
+      "level": "Warning",
+      "message": "Event with no task",
+      "keywords": [ "Raz" ],
+      "opcode": "Info"
+    },
+    {
+      "id": 3,
+      "name": "NoOpcode",
+      "level": "Error",
+      "message": "Event with no Opcode",
+      "keywords": [ "Baz", "Faz" ],
+      "task": "Boo"
+    }
+  ]
+}
