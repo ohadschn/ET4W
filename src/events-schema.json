@@ -12,22 +12,30 @@
       "uniqueItems": true,
       "items": { "$ref": "#/definitions/identifier" }
     },
+    "parameter": {
+      "type": "object",
+      "properties": {
+        "name": { "$ref": "#/definitions/identifier" },
+        "type": { "enum": [ "Boolean", "Char", "SByte", "Byte", "Int16", "UInt16", "Int32", "UInt32", "Int64", "UInt64", "Single", "Double", "DateTime", "String", "GUID", "IntPtr", "ByteArray" ] }
+      },
+      "required": [ "name", "type" ]
+    },
+    "parameter-array": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/parameter" }
+    },
     "event": {
       "type": "object",
       "properties": {
         "id": { "type": "integer" },
         "name": { "$ref": "#/definitions/identifier" },
-        "level": {
-          "type": "string",
-          "enum": [ "Verbose", "Informational", "Warning", "Error", "Critical", "LogAlways" ]
-        },
+        "level": { "enum": [ "Verbose", "Informational", "Warning", "Error", "Critical", "LogAlways" ] },
         "message": { "type": "string" },
         "keywords": { "$ref": "#/definitions/identifier-array" },
         "task": { "$ref": "#/definitions/identifier" },
-        "opcode": {
-          "type": "string",
-          "enum": [ "Info", "Start", "Stop", "DataCollectionStart", "DataCollectionStop", "Extension", "Reply", "Resume", "Suspend", "Send", "Receive" ]
-        }
+        "opcode": { "enum": [ "Info", "Start", "Stop", "DataCollectionStart", "DataCollectionStop", "Extension", "Reply", "Resume", "Suspend", "Send", "Receive" ] },
+        "parameters": { "$ref": "#/definitions/parameter-array" }
       },
       "required": [
         "id",
@@ -45,7 +53,7 @@
       "allOf": [
         { "$ref": "#/definitions/identifier-array" },
         { "maxItems": 44 }
-      ] 
+      ]
     },
     "events": {
       "type": "array",

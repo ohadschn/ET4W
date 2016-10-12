@@ -28,6 +28,72 @@
       "message": "Event with no Opcode",
       "keywords": [ "Baz", "Faz" ],
       "task": "Boo"
+    },
+    {
+      "id": 4,
+      "name": "Parameters",
+      "parameters": [
+        {
+          "name": "b",
+          "type": "Boolean"
+        },
+        {
+          "name": "c",
+          "type": "Char"
+        },
+        {
+          "name": "sb",
+          "type": "SByte"
+        },
+        {
+          "name": "by",
+          "type": "Byte"
+        },
+        {
+          "name": "i16",
+          "type": "Int16"
+        },
+        {
+          "name": "ui16",
+          "type": "UInt16"
+        },
+        {
+          "name": "i32",
+          "type": "UInt32"
+        },
+        {
+          "name": "ui32",
+          "type": "UInt32"
+        },
+        {
+          "name": "i64",
+          "type": "UInt64"
+        },
+        {
+          "name": "ui64",
+          "type": "UInt64"
+        },
+        {
+          "name": "sin",
+          "type": "Single"
+        },
+        {
+          "name": "d",
+          "type": "Double"
+        },
+        {
+          "name": "s",
+          "type": "String"
+        },
+        {
+          "name": "g",
+          "type": "GUID"
+        },
+        {
+          "name": "ptr",
+          "type": "IntPtr"
+        }
+      ]
     }
   ]
 }

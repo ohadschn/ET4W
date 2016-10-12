@@ -3,6 +3,7 @@ using System.Reflection;
 using Tests.EventSources;
 using System.Diagnostics.Tracing;
 using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Utility;
+using System;
 
 namespace Tests
 {
@@ -61,6 +62,15 @@ namespace Tests
         {
             AssertEventAttributes("NoOpcode", 3, EventLevel.Error, "Event with no Opcode", TestsEventSource.Keywords.Baz | TestsEventSource.Keywords.Faz, TestsEventSource.Tasks.Boo, null);
             new TestsEvents().NoTask();
+        }
+
+        [TestMethod]
+        public void TestNativeParameters()
+        {
+            new Guid();
+            AssertEventAttributes("Parameters", 4, EventLevel.Informational, null, EventKeywords.None, EventTask.None, null);
+            //DateTime and byte[] are not tested due to an EventAnalyzer issues that should be fixed in the next release
+            new TestsEvents().Parameters(true, 'a', 1, 2, 3, 4, 5, 6, 7, 8, 1.0f, 2.3, "foo", Guid.NewGuid(), IntPtr.Zero);
         }
     }
 }
