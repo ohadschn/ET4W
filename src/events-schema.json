@@ -3,22 +3,61 @@
   "id": "https://github.com/ohadschn/ET4W/src/events-schema.json",
 
   "definitions": {
+    "etwNativeType": {
+      "enum": [ "Boolean", "Char", "SByte", "Byte", "Int16", "UInt16", "Int32", "UInt32", "Int64", "UInt64", "Single", "Double", "DateTime", "String", "GUID", "IntPtr", "ByteArray" ]
+    },
+    "etwEventLevel": {
+      "enum": [ "Verbose", "Informational", "Warning", "Error", "Critical", "LogAlways" ]
+    },
+    "etwOpcode": {
+      "enum": [ "Info", "Start", "Stop", "DataCollectionStart", "DataCollectionStop", "Extension", "Reply", "Resume", "Suspend", "Send", "Receive" ]
+    },
     "identifier": {
       "type": "string",
-      "pattern": "^([a-zA-Z_][a-zA-Z0-9-_]*)*$"
+      "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$"
+    },
+    "fullyQualifiedIdentifier": {
+      "type": "string",
+      "pattern": "^[a-zA-Z_](\\.?[a-zA-Z0-9_]+)*$"
     },
     "identifier-array": {
       "type": "array",
       "uniqueItems": true,
       "items": { "$ref": "#/definitions/identifier" }
     },
+    "customType": {
+      "type": "object",
+      "properties": {
+        "fullyQualifiedName": { "$ref": "#/definitions/fullyQualifiedIdentifier" },
+        "targetType": { "$ref": "#/definitions/etwNativeType" }
+      },
+      "required": [ "fullyQualifiedName", "targetType" ]
+    },
+    "customType-array": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/customType" }
+    },
     "parameter": {
       "type": "object",
       "properties": {
-        "name": { "$ref": "#/definitions/identifier" },
-        "type": { "enum": [ "Boolean", "Char", "SByte", "Byte", "Int16", "UInt16", "Int32", "UInt32", "Int64", "UInt64", "Single", "Double", "DateTime", "String", "GUID", "IntPtr", "ByteArray" ] }
+        "name": { "$ref": "#/definitions/identifier" }
       },
-      "required": [ "name", "type" ]
+      "required": [ "name" ],
+      "oneOf": [
+        {
+          "properties": {
+            "type": { "$ref": "#/definitions/etwNativeType" }
+          },
+          "required": [ "type" ]
+        },
+        {
+          "properties": {
+            "customType": { "$ref": "#/definitions/fullyQualifiedIdentifier" }
+          },
+          "required": [ "customType" ]
+        }
+      ]
     },
     "parameter-array": {
       "type": "array",
@@ -30,11 +69,11 @@
       "properties": {
         "id": { "type": "integer" },
         "name": { "$ref": "#/definitions/identifier" },
-        "level": { "enum": [ "Verbose", "Informational", "Warning", "Error", "Critical", "LogAlways" ] },
+        "level": { "$ref": "#/definitions/etwEventLevel" },
         "message": { "type": "string" },
         "keywords": { "$ref": "#/definitions/identifier-array" },
         "task": { "$ref": "#/definitions/identifier" },
-        "opcode": { "enum": [ "Info", "Start", "Stop", "DataCollectionStart", "DataCollectionStop", "Extension", "Reply", "Resume", "Suspend", "Send", "Receive" ] },
+        "opcode": { "$ref": "#/definitions/etwOpcode" },
         "parameters": { "$ref": "#/definitions/parameter-array" }
       },
       "required": [
@@ -55,6 +94,7 @@
         { "maxItems": 44 }
       ]
     },
+    "customTypes": { "$ref": "#/definitions/customType-array" },
     "events": {
       "type": "array",
       "items": { "$ref": "#/definitions/event" }

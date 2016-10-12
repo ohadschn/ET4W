@@ -4,6 +4,20 @@
   "sourceName": "OS-Test-Foo",
   "tasks": [ "Foo", "Boo" ],
   "keywords": [ "Baz", "Faz", "Raz" ],
+  "customTypes": [
+    {
+      "fullyQualifiedName": "Tests.CustomType",
+      "targetType": "String"
+    },
+    {
+      "fullyQualifiedName": "Tests.AnotherCustomType",
+      "targetType": "Int32"
+    },
+    {
+      "fullyQualifiedName": "Tests.TestEnum",
+      "targetType": "Int32"
+    }
+  ],
   "events": [
     {
       "id": 1,
@@ -92,6 +106,29 @@
         {
           "name": "ptr",
           "type": "IntPtr"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "CustomTypes",
+      "level": "Critical",
+      "parameters": [
+        {
+          "name": "foo",
+          "customType": "Tests.CustomType"
+        },
+        {
+          "name": "bar",
+          "type": "Double"
+        },
+        {
+          "name": "baz",
+          "customType": "Tests.AnotherCustomType"
+        },
+        {
+          "name": "enm",
+          "customType": "Tests.TestEnum"
         }
       ]
     }

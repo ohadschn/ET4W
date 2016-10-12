@@ -7,9 +7,33 @@ using System;
 
 namespace Tests
 {
+    public class CustomType
+    {
+        public string Foo { get; set; }
+    }
+
+    public class AnotherCustomType
+    {
+        public int Bar { get; set; }
+    }
+
+    public enum TestEnum
+    {
+        Hello = 0,
+        World = 1
+    }
+
     [TestClass]
     public class EventTests
     {
+        TestsEvents m_testsEvents;
+
+        [TestInitialize]
+        public void BeforeEach()
+        {
+            m_testsEvents = new TestsEvents(ct => ct.Foo, act => act.Bar, te => (int)te);
+        }
+
         private void AssertEventAttributes(string eventName, int expectedId, EventLevel expectedLevel, string expectedMessage, 
             EventKeywords expectedKeywords, EventTask expectedTask, EventOpcode? expectedOpcode)
         {
@@ -47,30 +71,38 @@ namespace Tests
         public void TestNoKeywords()
         {
             AssertEventAttributes("NoKeyWords", 1, EventLevel.Informational, "Event with no keywords", EventKeywords.None, TestsEventSource.Tasks.Foo, EventOpcode.Info);
-            new TestsEvents().NoKeyWords();
+            m_testsEvents.NoKeyWords();
         }
 
         [TestMethod]
         public void TestNoTask()
         {
             AssertEventAttributes("NoTask", 2, EventLevel.Warning, "Event with no task", TestsEventSource.Keywords.Raz, EventTask.None, EventOpcode.Info);
-            new TestsEvents().NoOpcode();
+            m_testsEvents.NoOpcode();
         }
 
         [TestMethod]
         public void TestNoOpcode()
         {
             AssertEventAttributes("NoOpcode", 3, EventLevel.Error, "Event with no Opcode", TestsEventSource.Keywords.Baz | TestsEventSource.Keywords.Faz, TestsEventSource.Tasks.Boo, null);
-            new TestsEvents().NoTask();
+            m_testsEvents.NoTask();
         }
 
         [TestMethod]
         public void TestNativeParameters()
         {
-            new Guid();
             AssertEventAttributes("Parameters", 4, EventLevel.Informational, null, EventKeywords.None, EventTask.None, null);
-            //DateTime and byte[] are not tested due to an EventAnalyzer issues that should be fixed in the next release
-            new TestsEvents().Parameters(true, 'a', 1, 2, 3, 4, 5, 6, 7, 8, 1.0f, 2.3, "foo", Guid.NewGuid(), IntPtr.Zero);
+            //DateTime and byte[] are not tested due to EventAnalyzer issues that should be fixed in the next release:
+            //https://github.com/mspnp/semantic-logging/pull/83
+            //https://github.com/mspnp/semantic-logging/pull/94
+            m_testsEvents.Parameters(true, 'a', 1, 2, 3, 4, 5, 6, 7, 8, 1.0f, 2.3, "foo", Guid.NewGuid(), IntPtr.Zero);
+        }
+
+        [TestMethod]
+        public void TestCustomTypes()
+        {
+            AssertEventAttributes("CustomTypes", 5, EventLevel.Critical, null, EventKeywords.None, EventTask.None, null);
+            m_testsEvents.CustomTypes(new CustomType { Foo = "foo" }, 1.0, new AnotherCustomType(), TestEnum.Hello);
         }
     }
 }
