@@ -44,29 +44,36 @@ using System.Diagnostics.Tracing;
 
 namespace <#= nameSpace #>
 {	
+	//wrapper event class
 	public partial class <#= eventClassName #>
-	{
-<#+
-		foreach (var commonParam in eventDefinitions.CommonParameters.Where(cp => cp.Generated))
-{#>
-		<#= Util.GetGeneratorType(commonParam) #> m_<#= Util.GetGeneratorName(commonParam) #>;
-<#+ } #>
+	{	
+		//custom type converters
 <#+
 		foreach (var customType in eventDefinitions.CustomTypes)
 {#>
-		<#= Util.GetConverterType(customType) #> m_<#= Util.GetConverterName(customType.FullyQualifiedName) #>;
+		private <#= Util.GetConverterType(customType) #> m_<#= Util.GetConverterName(customType.FullyQualifiedName) #>;
+<#+ } #>
+
+		//common parameter generators
+<#+
+		foreach (var commonParam in eventDefinitions.CommonParameters.Where(cp => cp.Generated))
+{#>
+		private <#= Util.GetGeneratorType(commonParam) #> m_<#= Util.GetGeneratorName(commonParam) #>;
 <#+ } #>
 		
+		//ctor
 		public <#= eventClassName #>(<#= String.Join(", ", 
 			eventDefinitions.CustomTypes.Select(ct => Util.GetParamSignature(Util.GetConverterType(ct), Util.GetConverterName(ct.FullyQualifiedName)))
 			.Union(eventDefinitions.CommonParameters.Where(cp => cp.Generated).Select(cp => Util.GetParamSignature(Util.GetGeneratorType(cp), Util.GetGeneratorName(cp))))) #>)
 		{
+			//converter assignments
 <#+
 		foreach (var customType in eventDefinitions.CustomTypes)
 {#>
 			m_<#= Util.GetConverterName(customType.FullyQualifiedName) #> = <#= Util.GetConverterName(customType.FullyQualifiedName) #>;
 <#+ } #>
 
+			//generator assignments
 <#+
 		foreach (var generatedParam in eventDefinitions.CommonParameters.Where(cp => cp.Generated))
 {#>
@@ -74,23 +81,28 @@ namespace <#= nameSpace #>
 <#+ } #>
 		}
 
+		//wrapper event methods
+
 <#+
-		foreach (var evnt in eventDefinitions.Events)
+		foreach (var eventDef in eventDefinitions.Events)
 { #>
-		public void <#= evnt.Name #>(<#= String.Join(", ", 
-		Util.GetCombinedParameters(evnt, eventDefinitions, EventCombinedParams.NonGenerated).Select(cp => Util.GetParamSignature(cp.Type, cp.Name))) #>)
+		public void <#= eventDef.Name #>(<#= String.Join(", ", 
+		Util.GetCombinedParameters(eventDef, eventDefinitions, EventCombinedParams.NonGenerated).Select(cp => Util.GetParamSignature(cp.Type, cp.Name))) #>)
 		{
-			<#= eventSourceClassName #>.Log.<#= evnt.Name #>(<#= String.Join(", ", 
-					Util.GetCombinedParameters(evnt, eventDefinitions, EventCombinedParams.Both).Select(Util.GetEtwParamCall)) #>);
+			<#= eventSourceClassName #>.Log.<#= eventDef.Name #>(<#= String.Join(", ", 
+					Util.GetCombinedParameters(eventDef, eventDefinitions, EventCombinedParams.Both).Select(Util.GetEtwParamCall)) #>);
 		}
 <#+ } #>
 	}
 
+	//event source
 	[EventSource(Name = "<#= eventDefinitions.SourceName #>")]
 	public sealed class <#= eventSourceClassName #> : <#= baseType.FullName #>
 	{
+		//static log property for easy access
 		public static readonly <#= eventSourceClassName #> Log = new <#= eventSourceClassName #>();
 
+		//event keywords
 		public sealed class Keywords
 		{
 			private Keywords() {}
@@ -104,6 +116,7 @@ namespace <#= nameSpace #>
 	} #>
 		}
 
+		//event tasks
 		public sealed class Tasks
 		{
 			private Tasks() {}
@@ -115,35 +128,37 @@ namespace <#= nameSpace #>
 <#+ } #>
 		}
 
+		//ETW event methods
+
 <#+ 
-	foreach (var evnt in eventDefinitions.Events)
+	foreach (var eventDef in eventDefinitions.Events)
 	{ #>
-		[Event(<#= evnt.Id #>
-<#+ if (evnt.Keywords.Length > 0)
+		[Event(<#= eventDef.Id #>
+<#+ if (eventDef.Keywords.Length > 0)
 { #>
-			,Keywords=<#= String.Join(" | ", evnt.Keywords.Select(k => KeywordsClassName + "." + k)) #>
+			,Keywords=<#= String.Join(" | ", eventDef.Keywords.Select(k => KeywordsClassName + "." + k)) #>
 <#+ } #>
-<#+ if (evnt.Task != null)
+<#+ if (eventDef.Task != null)
 { #>
-			,Task=Tasks.<#= evnt.Task #>
+			,Task=Tasks.<#= eventDef.Task #>
 <#+ } #>
-<#+ if (evnt.Opcode != null)
+<#+ if (eventDef.Opcode != null)
 { #>
-			,Opcode=EventOpcode.<#= evnt.Opcode #>
+			,Opcode=EventOpcode.<#= eventDef.Opcode #>
 <#+ } #>
-<#+ if (evnt.Level != null)
+<#+ if (eventDef.Level != null)
 { #>
-			,Level=<#= nameof(EventLevel) + "." + evnt.Level #>
+			,Level=<#= nameof(EventLevel) + "." + eventDef.Level #>
 <#+ } #>
-<#+ if (evnt.Message != null)
+<#+ if (eventDef.Message != null)
 { #>
-			,Message="<#= evnt.Message.Replace("\\", "\\\\").Replace("\"", "\\\"")#>"
+			,Message="<#= eventDef.Message.Replace("\\", "\\\\").Replace("\"", "\\\"")#>"
 <#+ } #>
 		)]
-		public void <#= evnt.Name #>(<#= String.Join(", ", 	Util.GetCombinedParameters(evnt, eventDefinitions, EventCombinedParams.Both)
+		public void <#= eventDef.Name #>(<#= String.Join(", ", 	Util.GetCombinedParameters(eventDef, eventDefinitions, EventCombinedParams.Both)
 																.Select(p => Util.GetParamSignature(p.IsCustomType ? customTypeTargets[p.Type] : p.Type, p.Name))) #>)
 		{
-			WriteEvent(<#= evnt.Id #><#+ foreach (var param in Util.GetCombinedParameters(evnt, eventDefinitions, EventCombinedParams.Both)) { #>, <#= param.Name #><#+ } #>);
+			WriteEvent(<#= eventDef.Id #><#+ foreach (var param in Util.GetCombinedParameters(eventDef, eventDefinitions, EventCombinedParams.Both)) { #>, <#= param.Name #><#+ } #>);
 		}
 <#+ } #>
 	}
@@ -179,45 +194,45 @@ private void ValidateEventDefinitions(EventDefinitions eventDefinitions)
 			String.Join(", ", unknownCommonCustomTypes)));
 	}
 
-	foreach (var evnt in eventDefinitions.Events)
+	foreach (var eventDef in eventDefinitions.Events)
 	{
-		var unknownKeywords = evnt.Keywords.Except(eventDefinitions.Keywords).ToArray();
+		var unknownKeywords = eventDef.Keywords.Except(eventDefinitions.Keywords).ToArray();
 		if (unknownKeywords.Length > 0)
 		{
 			throw new ArgumentException(Util.FormatInvariant(
 				"Error validating event {0} ({1}) - unknown keyword(s) (not defined in the top-most 'keywords' property - note that it is CASE SENSITIVE): {2} ", 
-				evnt.Name, evnt.Id, String.Join(", ", unknownKeywords)));
+				eventDef.Name, eventDef.Id, String.Join(", ", unknownKeywords)));
 		}
 
-		if (evnt.Task != null && !eventDefinitions.Tasks.Contains(evnt.Task))
+		if (eventDef.Task != null && !eventDefinitions.Tasks.Contains(eventDef.Task))
 		{
 			throw new ArgumentException(Util.FormatInvariant(
 				"Error validating event {0} ({1}) - unknown task (not defined in the top-most 'tasks' property - note that it is CASE SENSITIVE): {2}",
-				evnt.Name, evnt.Id, evnt.Task));
+				eventDef.Name, eventDef.Id, eventDef.Task));
 		}
 
-		var duplicateParamNames = evnt.Parameters.GroupBy(p => p.Name).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
+		var duplicateParamNames = eventDef.Parameters.GroupBy(p => p.Name).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
 		if (duplicateParamNames.Length > 0)
         {
 			throw new ArgumentException(Util.FormatInvariant(
 				"Error validating event {0} ({1}) - duplicate parameter name(s) detected: {2}", 
-				evnt.Name, evnt.Id, String.Join(", ", duplicateParamNames)));
+				eventDef.Name, eventDef.Id, String.Join(", ", duplicateParamNames)));
         }
 
-		var unknownCustomTypes = evnt.Parameters.Where(p => p.IsCustomType).Select(ct => ct.Type).Except(eventDefinitions.CustomTypes.Select(ct => ct.FullyQualifiedName)).ToArray();
+		var unknownCustomTypes = eventDef.Parameters.Where(p => p.IsCustomType).Select(ct => ct.Type).Except(eventDefinitions.CustomTypes.Select(ct => ct.FullyQualifiedName)).ToArray();
 		if (unknownCustomTypes.Length > 0)
 		{
 			throw new ArgumentException(Util.FormatInvariant(
 				"Error validating event {0} ({1}) - unknown custom type(s) (not defined in the top-most 'customTypes' property - note that the type name must be fully qualified by its namespace [e.g. 'My.NameSpace.Type'] and it is CASE SENSITIVE): {2}", 
-				evnt.Name, evnt.Id, String.Join(", ", unknownCustomTypes)));
+				eventDef.Name, eventDef.Id, String.Join(", ", unknownCustomTypes)));
 		}
 
-		var collidingParams = evnt.Parameters.Select(p => p.Name).Intersect(eventDefinitions.CommonParameters.Select(cp => cp.Name)).ToArray();
+		var collidingParams = eventDef.Parameters.Select(p => p.Name).Intersect(eventDefinitions.CommonParameters.Select(cp => cp.Name)).ToArray();
 		if (collidingParams.Length > 0)
         {
 			throw new ArgumentException(Util.FormatInvariant(
 				"Error validating event {0} ({1}) - the following parameter name(s) collide(s) with common parameter name(s) (as defined in the top-most 'commonParameters' property): {2}",
-				evnt.Name, evnt.Id, String.Join(", ", collidingParams)));
+				eventDef.Name, eventDef.Id, String.Join(", ", collidingParams)));
         }
 	}
 }
