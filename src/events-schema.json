@@ -64,6 +64,23 @@
       "uniqueItems": true,
       "items": { "$ref": "#/definitions/parameter" }
     },
+    "commonParameter": {
+      "allOf": [
+        {
+          "$ref": "#/definitions/parameter"
+        },
+        {
+          "properties": {
+            "generated": { "type": "boolean" }
+          }
+        }
+      ]
+    },
+    "commonParameter-array": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"$ref": "#/definitions/commonParameter"}
+    },
     "event": {
       "type": "object",
       "properties": {
@@ -80,9 +97,13 @@
         "id",
         "name"
       ]
+    },
+    "event-array": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "$ref": "#/definitions/event" }
     }
   },
-
   "type": "object",
   "properties": {
     "class": { "$ref": "#/definitions/identifier" },
@@ -95,10 +116,8 @@
       ]
     },
     "customTypes": { "$ref": "#/definitions/customType-array" },
-    "events": {
-      "type": "array",
-      "items": { "$ref": "#/definitions/event" }
-    }
+    "commonParameters": { "$ref": "#/definitions/commonParameter-array" },
+    "events": { "$ref": "#/definitions/event-array" }
   },
   "required": [
     "class",

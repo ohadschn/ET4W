@@ -7,6 +7,10 @@ using System;
 
 namespace Tests
 {
+    public class Session
+    {
+        public Guid Id { get; set; }
+    }
     public class CustomType
     {
         public string Foo { get; set; }
@@ -31,7 +35,7 @@ namespace Tests
         [TestInitialize]
         public void BeforeEach()
         {
-            m_testsEvents = new TestsEvents(ct => ct.Foo, act => act.Bar, te => (int)te);
+            m_testsEvents = new TestsEvents(ct => ct.Foo, act => act.Bar, te => (int)te, s => s.Id, () => new Session { Id = Guid.NewGuid() });
         }
 
         private void AssertEventAttributes(string eventName, int expectedId, EventLevel expectedLevel, string expectedMessage, 
@@ -71,21 +75,21 @@ namespace Tests
         public void TestNoKeywords()
         {
             AssertEventAttributes("NoKeyWords", 1, EventLevel.Informational, "Event with no keywords", EventKeywords.None, TestsEventSource.Tasks.Foo, EventOpcode.Info);
-            m_testsEvents.NoKeyWords();
+            m_testsEvents.NoKeyWords(Guid.Empty);
         }
 
         [TestMethod]
         public void TestNoTask()
         {
             AssertEventAttributes("NoTask", 2, EventLevel.Warning, "Event with no task", TestsEventSource.Keywords.Raz, EventTask.None, EventOpcode.Info);
-            m_testsEvents.NoOpcode();
+            m_testsEvents.NoOpcode(Guid.Empty);
         }
 
         [TestMethod]
         public void TestNoOpcode()
         {
             AssertEventAttributes("NoOpcode", 3, EventLevel.Error, "Event with no Opcode", TestsEventSource.Keywords.Baz | TestsEventSource.Keywords.Faz, TestsEventSource.Tasks.Boo, null);
-            m_testsEvents.NoTask();
+            m_testsEvents.NoTask(Guid.Empty);
         }
 
         [TestMethod]
@@ -95,14 +99,14 @@ namespace Tests
             //DateTime and byte[] are not tested due to EventAnalyzer issues that should be fixed in the next release:
             //https://github.com/mspnp/semantic-logging/pull/83
             //https://github.com/mspnp/semantic-logging/pull/94
-            m_testsEvents.Parameters(true, 'a', 1, 2, 3, 4, 5, 6, 7, 8, 1.0f, 2.3, "foo", Guid.NewGuid(), IntPtr.Zero);
+            m_testsEvents.Parameters(Guid.Empty, true, 'a', 1, 2, 3, 4, 5, 6, 7, 8, 1.0f, 2.3, "foo", Guid.NewGuid(), IntPtr.Zero);
         }
 
         [TestMethod]
         public void TestCustomTypes()
         {
             AssertEventAttributes("CustomTypes", 5, EventLevel.Critical, null, EventKeywords.None, EventTask.None, null);
-            m_testsEvents.CustomTypes(new CustomType { Foo = "foo" }, 1.0, new AnotherCustomType(), TestEnum.Hello);
+            m_testsEvents.CustomTypes(Guid.Empty, new CustomType { Foo = "foo" }, 1.0, new AnotherCustomType(), TestEnum.Hello);
         }
     }
 }

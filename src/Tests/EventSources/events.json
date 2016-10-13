@@ -16,6 +16,26 @@
     {
       "fullyQualifiedName": "Tests.TestEnum",
       "targetType": "Int32"
+    },
+    {
+      "fullyQualifiedName": "Tests.Session",
+      "targetType": "GUID"
+    }
+  ],
+  "commonParameters": [
+    {
+      "name": "context",
+      "type": "GUID"
+    },
+    {
+      "name": "session",
+      "customType": "Tests.Session",
+      "generated": true
+    },
+    {
+      "name": "session2",
+      "customType": "Tests.Session",
+      "generated": true
     }
   ],
   "events": [
