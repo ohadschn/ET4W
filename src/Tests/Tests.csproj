@@ -64,7 +64,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="EventSources\Test.cs">
+    <Compile Include="Events\MinimalTest.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MinimalTest.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Events\Test.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Test.tt</DependentUpon>
@@ -82,14 +87,21 @@
     <None Include="..\events-schema.json">
       <Link>EventSources\events-schema.json</Link>
     </None>
-    <None Include="EventSources\events.json" />
+    <None Include="Events\events.json" />
+    <None Include="Events\minimalEvents.json" />
     <None Include="packages.config" />
     <None Include="_EventRegisterUsersGuide.docx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="EventSources\Test.tt">
+    <None Include="Events\Test.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Test.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Events\MinimalTest.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MinimalTest.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Choose>

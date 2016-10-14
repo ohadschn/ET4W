@@ -47,14 +47,14 @@ namespace <#= nameSpace #>
 	//wrapper event class
 	public partial class <#= eventClassName #>
 	{	
-		//custom type converters
+		//custom type converters (if exist)
 <#+
 		foreach (var customType in eventDefinitions.CustomTypes)
 {#>
 		private <#= Util.GetConverterType(customType) #> m_<#= Util.GetConverterName(customType.FullyQualifiedName) #>;
 <#+ } #>
 
-		//common parameter generators
+		//common parameter generators (if exist)
 <#+
 		foreach (var commonParam in eventDefinitions.CommonParameters.Where(cp => cp.Generated))
 {#>
@@ -66,14 +66,14 @@ namespace <#= nameSpace #>
 			eventDefinitions.CustomTypes.Select(ct => Util.GetParamSignature(Util.GetConverterType(ct), Util.GetConverterName(ct.FullyQualifiedName)))
 			.Union(eventDefinitions.CommonParameters.Where(cp => cp.Generated).Select(cp => Util.GetParamSignature(Util.GetGeneratorType(cp), Util.GetGeneratorName(cp))))) #>)
 		{
-			//converter assignments
+			//converter assignments (if exist)
 <#+
 		foreach (var customType in eventDefinitions.CustomTypes)
 {#>
 			m_<#= Util.GetConverterName(customType.FullyQualifiedName) #> = <#= Util.GetConverterName(customType.FullyQualifiedName) #>;
 <#+ } #>
 
-			//generator assignments
+			//generator assignments (if exist)
 <#+
 		foreach (var generatedParam in eventDefinitions.CommonParameters.Where(cp => cp.Generated))
 {#>

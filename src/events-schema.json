@@ -101,7 +101,8 @@
     "event-array": {
       "type": "array",
       "uniqueItems": true,
-      "items": { "$ref": "#/definitions/event" }
+      "items": { "$ref": "#/definitions/event" },
+      "minItems": 1
     }
   },
   "type": "object",

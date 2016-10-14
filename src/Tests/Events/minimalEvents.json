@@ -1,0 +1,11 @@
+﻿{
+  "$schema": "../../events-schema.json",
+  "class": "Minimal",
+  "sourceName": "OS-Test-Minimal",
+  "events": [
+    {
+      "id": 1,
+      "name": "Foo"
+    }
+  ]
+}
