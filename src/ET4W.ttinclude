@@ -10,7 +10,6 @@
 <#@ import namespace="System.Diagnostics.Tracing" #>
 <#@ import namespace="System.Globalization" #>
 <#+
-const string KeywordsClassName = "Keywords";
 private void WriteEventSource(string eventsFile, string nameSpace, Type baseType = null)
 {
 	baseType = baseType ?? typeof(EventSource);
@@ -136,7 +135,7 @@ namespace <#= nameSpace #>
 		[Event(<#= eventDef.Id #>
 <#+ if (eventDef.Keywords.Length > 0)
 { #>
-			,Keywords=<#= String.Join(" | ", eventDef.Keywords.Select(k => KeywordsClassName + "." + k)) #>
+			,Keywords=<#= String.Join(" | ", eventDef.Keywords.Select(k => "Keywords." + k)) #>
 <#+ } #>
 <#+ if (eventDef.Task != null)
 { #>
