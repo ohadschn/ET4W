@@ -4,6 +4,8 @@ using Tests.Events;
 using System.Diagnostics.Tracing;
 using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Utility;
 using System;
+using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
+using System.Globalization;
 
 namespace Tests
 {
@@ -30,12 +32,31 @@ namespace Tests
     [TestClass]
     public class EventTests
     {
-        TestsEvents m_testsEvents;
+        static Guid m_sessionId;
+        static MemoryRetentionSink m_sink;
+        static ObservableEventListener m_listener;
+        static TestsEvents m_testsEvents;
 
-        [TestInitialize]
-        public void BeforeEach()
+        [ClassInitialize]
+        public static void BeforeAll(TestContext context)
         {
-            m_testsEvents = new TestsEvents(ct => ct.Foo, act => act.Bar, te => (int)te, s => s.Id, () => new Session { Id = Guid.NewGuid() }, () => new Session() );
+            m_sessionId = Guid.NewGuid();
+            m_testsEvents = new TestsEvents(ct => ct.Foo, act => act.Bar, te => (int)te, s => s.Id, () => new Session { Id = m_sessionId }, () => new Session());
+            m_listener = new ObservableEventListener();
+            m_listener.EnableEvents(TestsEventSource.Log, EventLevel.Verbose);
+            m_sink = m_listener.RetainEventRecords().Sink;
+        }
+
+        [TestCleanup]
+        public void AfterEach()
+        {
+            m_sink.Clear();
+        }
+
+        [ClassCleanup]
+        public static void AfterAll()
+        {
+            m_listener.Dispose();
         }
 
         [TestMethod]
@@ -53,39 +74,57 @@ namespace Tests
         [TestMethod]
         public void TestNoKeywords()
         {
-            Util.AssertEventAttributes<TestsEventSource>("NoKeyWords", 1, EventLevel.Informational, "Event with no keywords", EventKeywords.None, TestsEventSource.Tasks.Foo, EventOpcode.Info);
-            m_testsEvents.NoKeyWords(Guid.Empty);
+            const string expectedMessage = "Event with no keywords";
+            Util.AssertEventAttributes<TestsEventSource>("FooInfo", 1, EventLevel.Informational, expectedMessage, EventKeywords.None, TestsEventSource.Tasks.Foo, EventOpcode.Info);
+            var context = Guid.NewGuid();
+            m_testsEvents.FooInfo(context);
+            m_sink.AssertEventRecord(1, expectedMessage, new object[] { context, m_sessionId, Guid.Empty });
         }
 
         [TestMethod]
         public void TestNoTask()
         {
-            Util.AssertEventAttributes<TestsEventSource>("NoTask", 2, EventLevel.Warning, "Event with no task", TestsEventSource.Keywords.Raz, EventTask.None, EventOpcode.Info);
-            m_testsEvents.NoOpcode(Guid.Empty);
+            const string expectedMessage = "Event with no task";
+            Util.AssertEventAttributes<TestsEventSource>("NoTask", 2, EventLevel.Warning, expectedMessage, TestsEventSource.Keywords.Raz, EventTask.None, EventOpcode.Info);
+            var context = Guid.NewGuid();
+            m_testsEvents.NoTask(context);
+            m_sink.AssertEventRecord(2, expectedMessage, new object[] { context, m_sessionId, Guid.Empty });
         }
 
         [TestMethod]
         public void TestNoOpcode()
         {
-            Util.AssertEventAttributes<TestsEventSource>("NoOpcode", 3, EventLevel.Error, "Event with no Opcode", TestsEventSource.Keywords.Baz | TestsEventSource.Keywords.Faz, TestsEventSource.Tasks.Boo, null);
-            m_testsEvents.NoTask(Guid.Empty);
+            const string expectedMessage = "Event with no Opcode";
+            Util.AssertEventAttributes<TestsEventSource>("NoOpcode", 3, EventLevel.Error, expectedMessage, TestsEventSource.Keywords.Baz | TestsEventSource.Keywords.Faz, TestsEventSource.Tasks.Boo, null);
+            var context = Guid.NewGuid();
+            m_testsEvents.NoOpcode(context);
+            m_sink.AssertEventRecord(3, expectedMessage, new object[] { context, m_sessionId, Guid.Empty });
         }
 
         [TestMethod]
         public void TestNativeParameters()
         {
-            Util.AssertEventAttributes<TestsEventSource>("Parameters", 4, EventLevel.Informational, null, EventKeywords.None, EventTask.None, null);
+            const string message = "context: {0}, session: {1}, session2: {2}, b: {3}, c: {4}, sb: {5}, by: {6}, i16: {7}, ui16: {8}, i32: {9}, ui32: {10}, i64: {11}, ui64: {12}, sin: {13}, d: {14}, s: {15}, g: {16}, ptr: {17}";
+            Util.AssertEventAttributes<TestsEventSource>("Parameters", 4, EventLevel.Informational, message, EventKeywords.None, EventTask.None, null);
             //DateTime and byte[] are not tested due to EventAnalyzer issues that should be fixed in the next release:
             //https://github.com/mspnp/semantic-logging/pull/83
             //https://github.com/mspnp/semantic-logging/pull/94
-            m_testsEvents.Parameters(Guid.Empty, true, 'a', 1, 2, 3, 4, 5, 6, 7, 8, 1.0f, 2.3, "foo", Guid.NewGuid(), IntPtr.Zero);
+            var context = Guid.NewGuid();
+            var guid = Guid.NewGuid();
+            m_testsEvents.Parameters(context, true, 'a', 1, 2, 3, 4, 5, 6, 7, 8, 1.0f, 2.3, "foo", guid, IntPtr.Zero);
+            m_sink.AssertEventRecord(4, String.Format(CultureInfo.InvariantCulture, message, context, m_sessionId, Guid.Empty, true, 'a', 1, 2, 3, 4, 5, 6, 7, 8, 1.0f, 2.3, "foo", guid, IntPtr.Zero), 
+                new object[] {
+                    context, m_sessionId, Guid.Empty, true, 'a', (sbyte)1, (byte)2, (short)3, (ushort)4, (int)5, (uint)6, (long)7, (ulong)8, 1.0f, 2.3, "foo", guid, IntPtr.Zero
+                });
         }
 
         [TestMethod]
         public void TestCustomTypes()
         {
             Util.AssertEventAttributes<TestsEventSource>("CustomTypes", 5, EventLevel.Critical, null, EventKeywords.None, EventTask.None, null);
-            m_testsEvents.CustomTypes(Guid.Empty, new CustomType { Foo = "foo" }, 1.0, new AnotherCustomType(), TestEnum.Hello);
+            var context = Guid.NewGuid();
+            m_testsEvents.CustomTypes(context, new CustomType { Foo = "foo" }, 1.0, new AnotherCustomType() { Bar = 42 }, TestEnum.World);
+            m_sink.AssertEventRecord(5, null, new object[] { context, m_sessionId, Guid.Empty, "foo", 1.0, 42, 1 });
         }
     }
 }

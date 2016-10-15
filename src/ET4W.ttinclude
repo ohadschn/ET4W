@@ -198,42 +198,57 @@ private void ValidateEventDefinitions(EventDefinitions eventDefinitions)
 		var unknownKeywords = eventDef.Keywords.Except(eventDefinitions.Keywords).ToArray();
 		if (unknownKeywords.Length > 0)
 		{
-			throw new ArgumentException(Util.FormatInvariant(
-				"Error validating event {0} ({1}) - unknown keyword(s) (not defined in the top-most 'keywords' property - note that it is CASE SENSITIVE): {2} ", 
-				eventDef.Name, eventDef.Id, String.Join(", ", unknownKeywords)));
+			throw new ArgumentException(GetEventValidationErrorMessage(eventDef, 
+				"unknown keyword(s) (not defined in the top-most 'keywords' property - note that it is CASE SENSITIVE): " + String.Join(", ", unknownKeywords)));
 		}
 
 		if (eventDef.Task != null && !eventDefinitions.Tasks.Contains(eventDef.Task))
 		{
-			throw new ArgumentException(Util.FormatInvariant(
-				"Error validating event {0} ({1}) - unknown task (not defined in the top-most 'tasks' property - note that it is CASE SENSITIVE): {2}",
-				eventDef.Name, eventDef.Id, eventDef.Task));
+			throw new ArgumentException(GetEventValidationErrorMessage(eventDef, 
+				"unknown task (not defined in the top-most 'tasks' property - note that it is CASE SENSITIVE): " + eventDef.Task));
 		}
 
 		var duplicateParamNames = eventDef.Parameters.GroupBy(p => p.Name).Where(g => g.Count() > 1).Select(g => g.Key).ToArray();
 		if (duplicateParamNames.Length > 0)
         {
-			throw new ArgumentException(Util.FormatInvariant(
-				"Error validating event {0} ({1}) - duplicate parameter name(s) detected: {2}", 
-				eventDef.Name, eventDef.Id, String.Join(", ", duplicateParamNames)));
+			throw new ArgumentException(GetEventValidationErrorMessage(eventDef, "duplicate parameter name(s) detected: " + String.Join(", ", duplicateParamNames)));
         }
 
 		var unknownCustomTypes = eventDef.Parameters.Where(p => p.IsCustomType).Select(ct => ct.Type).Except(eventDefinitions.CustomTypes.Select(ct => ct.FullyQualifiedName)).ToArray();
 		if (unknownCustomTypes.Length > 0)
 		{
-			throw new ArgumentException(Util.FormatInvariant(
-				"Error validating event {0} ({1}) - unknown custom type(s) (not defined in the top-most 'customTypes' property - note that the type name must be fully qualified by its namespace [e.g. 'My.NameSpace.Type'] and it is CASE SENSITIVE): {2}", 
-				eventDef.Name, eventDef.Id, String.Join(", ", unknownCustomTypes)));
+			throw new ArgumentException(GetEventValidationErrorMessage(eventDef, 
+				"unknown custom type(s) (not defined in the top-most 'customTypes' property - note that the type name must be fully qualified by its namespace [e.g. 'My.NameSpace.Type'] and it is CASE SENSITIVE): " + 
+				String.Join(", ", unknownCustomTypes)));
 		}
 
 		var collidingParams = eventDef.Parameters.Select(p => p.Name).Intersect(eventDefinitions.CommonParameters.Select(cp => cp.Name)).ToArray();
 		if (collidingParams.Length > 0)
         {
-			throw new ArgumentException(Util.FormatInvariant(
-				"Error validating event {0} ({1}) - the following parameter name(s) collide(s) with common parameter name(s) (as defined in the top-most 'commonParameters' property): {2}",
-				eventDef.Name, eventDef.Id, String.Join(", ", collidingParams)));
+			throw new ArgumentException(GetEventValidationErrorMessage(eventDef, 
+				"the following parameter name(s) collide(s) with common parameter name(s) (as defined in the top-most 'commonParameters' property): " + 
+				String.Join(", ", collidingParams)));
+        }
+
+		if (eventDef.Opcode != null)
+        {
+			if (eventDef.Task == null)
+            {
+				Warning(GetEventValidationErrorMessage(eventDef, 
+					"Opcode defined without task (see http://blogs.msmvps.com/kathleen/2014/01/24/how-are-event-parameters-best-used-to-create-an-intuitive-custom-evnetsourcetrace/)"));
+            }
+			else if (!String.Equals(eventDef.Task + eventDef.Opcode, eventDef.Name, StringComparison.Ordinal))
+            {
+				Warning(GetEventValidationErrorMessage(eventDef, 
+					"Opcode and Task are defined, but the event's name is not their concatenation (see http://blogs.msmvps.com/kathleen/2014/01/24/how-are-event-parameters-best-used-to-create-an-intuitive-custom-evnetsourcetrace/)"));
+            }
         }
 	}
+}
+
+static string GetEventValidationErrorMessage(EventDefinition eventDef, string message)
+{
+	return Util.FormatInvariant("Error validating event {0} ({1}) - {2}", eventDef.Name, eventDef.Id, message);
 }
 
 enum EventCombinedParams
@@ -304,7 +319,7 @@ static class Util
 				commonParams = eventDefs.CommonParameters.Where(cp => !cp.Generated);
 				break;
 			case EventCombinedParams.Both:
-				commonParams = eventDefs.CommonParameters.OrderByDescending(cp => cp.Generated); //generated first
+				commonParams = eventDefs.CommonParameters;
 				break;
 			default:
 				throw new ArgumentException("Invalid EventCombinedParams value: " + combinedParams, "combinedParams");

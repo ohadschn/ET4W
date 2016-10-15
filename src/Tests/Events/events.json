@@ -41,7 +41,7 @@
   "events": [
     {
       "id": 1,
-      "name": "NoKeyWords",
+      "name": "FooInfo",
       "level": "Informational",
       "message": "Event with no keywords",
       "task": "Foo",
@@ -52,8 +52,7 @@
       "name": "NoTask",
       "level": "Warning",
       "message": "Event with no task",
-      "keywords": [ "Raz" ],
-      "opcode": "Info"
+      "keywords": [ "Raz" ]
     },
     {
       "id": 3,
@@ -66,6 +65,7 @@
     {
       "id": 4,
       "name": "Parameters",
+      "message": "context: {0}, session: {1}, session2: {2}, b: {3}, c: {4}, sb: {5}, by: {6}, i16: {7}, ui16: {8}, i32: {9}, ui32: {10}, i64: {11}, ui64: {12}, sin: {13}, d: {14}, s: {15}, g: {16}, ptr: {17}",
       "parameters": [
         {
           "name": "b",
@@ -93,7 +93,7 @@
         },
         {
           "name": "i32",
-          "type": "UInt32"
+          "type": "Int32"
         },
         {
           "name": "ui32",
@@ -101,7 +101,7 @@
         },
         {
           "name": "i64",
-          "type": "UInt64"
+          "type": "Int64"
         },
         {
           "name": "ui64",
