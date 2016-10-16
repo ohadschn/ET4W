@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>OhadSoft.ET4W</id>
+    <version>1.0.0</version>
+    <authors>ohadschn</authors>
+    <owners>ohadschn</owners>
+    <licenseUrl>https://github.com/ohadschn/ET4W/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/ohadschn/ET4W</projectUrl>
+    <iconUrl>https://github.com/ohadschn/ET4W/raw/master/ET4W.png</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Generate C# ETW EventSource classes from JSON event specifications using T4 templates</summary>
+    <description>
+        Generate C# ETW EventSource classes from JSON event specifications using T4 templates.
+        For more information and usage instructions visit the project's home page: https://github.com/ohadschn/ET4W.
+    </description>
+    <copyright>All Rights Reserved Ohad Schneider © 2016</copyright>
+    <tags>EventSource log semantic logging ETW tracing SLAB</tags>
+  </metadata>
+  <files>
+    <file src="ET4W.ttinclude" target="content\ET4W\ET4W.ttinclude" />
+    <file src="events-schema.json" target="content\ET4W\events-schema.json" />
+  </files>
+</package>
