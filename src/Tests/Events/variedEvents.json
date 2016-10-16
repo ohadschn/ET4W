@@ -14,7 +14,7 @@
       "targetType": "Int32"
     },
     {
-      "fullyQualifiedName": "Tests.TestEnum",
+      "fullyQualifiedName": "Tests.Greeting",
       "targetType": "Int32"
     },
     {
@@ -148,7 +148,7 @@
         },
         {
           "name": "enm",
-          "customType": "Tests.TestEnum"
+          "customType": "Tests.Greeting"
         }
       ]
     }
