@@ -2,11 +2,30 @@
 using Tests.Events;
 using System.Diagnostics.Tracing;
 using System.Reflection;
+using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
 
 namespace Tests
 {
+    public abstract class EventSourceBase : EventSource
+    {
+        private readonly ObservableEventListener m_listener;
+        public MemoryRetentionSink Sink { get; private set; }
+
+        public void DisposeListener()
+        {
+            m_listener.Dispose();
+        }
+
+        protected EventSourceBase()
+        {
+            m_listener = new ObservableEventListener();
+            m_listener.EnableEvents(this, EventLevel.Verbose);
+            Sink = m_listener.RetainEventRecords().Sink;
+        }
+    }
+
     [TestClass]
-    public class EventSourceBaseTests
+    public class BaseClassEventsTests
     {
         private static BaseClassEvents s_baseClassEvents;
 
@@ -34,7 +53,7 @@ namespace Tests
             Assert.IsInstanceOfType(BaseClassEventSource.Log, typeof(EventSourceBase), "Event source class doesn't inherit from the expected base class");
 
             Assert.AreEqual("OS-Test-BaseClass", typeof(BaseClassEventSource).GetCustomAttribute<EventSourceAttribute>().Name, "Mismatched event source name");
-            Util.AssertEventAttributes<BaseClassEventSource>("Foo", 10, EventLevel.Informational, "Foo: {0}", EventKeywords.None, EventTask.None, null);
+            AssertHelper.AssertEventAttributes<BaseClassEventSource>("Foo", 10, EventLevel.Informational, "Foo: {0}", EventKeywords.None, EventTask.None, null);
             s_baseClassEvents.Foo("bar");
             BaseClassEventSource.Log.Sink.AssertEventRecord(10, "Foo: bar", new object[] { "bar" });
         }

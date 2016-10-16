@@ -9,7 +9,7 @@
       "message": "Foo: {0}",
       "parameters": [
         {
-          "name": "foo",
+          "name": "bar",
           "type": "String"
         }
       ]

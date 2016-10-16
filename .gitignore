@@ -252,6 +252,6 @@ paket-files/
 *.sln.iml
 
 # ET4W
-src/Tests/Events/TestEvents.cs
-src/Tests/Events/MinimalEvents.cs
+src/Tests/Events/variedEvents.cs
+src/Tests/Events/minimalEvents.cs
 src/Tests/Events/baseClassEvents.cs

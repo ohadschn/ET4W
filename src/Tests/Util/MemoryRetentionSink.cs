@@ -24,6 +24,12 @@ namespace Tests
 
         public void OnNext(EventEntry value)
         {
+            if (value == null)
+            {
+                RetainedErrors.Add(new InvalidOperationException("null value received in OnNext"));
+                return;
+            }
+
             RetainedEvents.Add(
                 new EventRecord(value.EventId, value.FormattedMessage, new ReadOnlyCollection<object>(value.Payload.ToArray()), value.Timestamp));
         }

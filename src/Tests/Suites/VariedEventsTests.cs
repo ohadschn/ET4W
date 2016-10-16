@@ -23,14 +23,14 @@ namespace Tests
         public int Bar { get; set; }
     }
 
-    public enum TestEnum
+    public enum Greeting
     {
         Hello = 0,
         World = 1
     }
 
     [TestClass]
-    public class EventTests
+    public class VariedEventsTests
     {
         static Guid s_sessionId;
         static MemoryRetentionSink s_sink;
@@ -68,14 +68,14 @@ namespace Tests
         [TestMethod]
         public void TestSourceName()
         {
-            Assert.AreEqual("OS-Test-Foo", typeof(TestsEventSource).GetCustomAttribute<EventSourceAttribute>().Name, "Mismatched event source name");
+            Assert.AreEqual("OS-Test-Varied", typeof(TestsEventSource).GetCustomAttribute<EventSourceAttribute>().Name, "Mismatched event source name");
         }
 
         [TestMethod]
         public void TestNoKeywords()
         {
             const string expectedMessage = "Event with no keywords";
-            Util.AssertEventAttributes<TestsEventSource>("FooInfo", 1, EventLevel.Informational, expectedMessage, EventKeywords.None, TestsEventSource.Tasks.Foo, EventOpcode.Info);
+            AssertHelper.AssertEventAttributes<TestsEventSource>("FooInfo", 1, EventLevel.Informational, expectedMessage, EventKeywords.None, TestsEventSource.Tasks.Foo, EventOpcode.Info);
             var context = Guid.NewGuid();
             s_testsEvents.FooInfo(context);
             s_sink.AssertEventRecord(1, expectedMessage, new object[] { context, s_sessionId, Guid.Empty });
@@ -85,7 +85,7 @@ namespace Tests
         public void TestNoTask()
         {
             const string expectedMessage = "Event with no task";
-            Util.AssertEventAttributes<TestsEventSource>("NoTask", 2, EventLevel.Warning, expectedMessage, TestsEventSource.Keywords.Raz, EventTask.None, EventOpcode.Info);
+            AssertHelper.AssertEventAttributes<TestsEventSource>("NoTask", 2, EventLevel.Warning, expectedMessage, TestsEventSource.Keywords.Raz, EventTask.None, EventOpcode.Info);
             var context = Guid.NewGuid();
             s_testsEvents.NoTask(context);
             s_sink.AssertEventRecord(2, expectedMessage, new object[] { context, s_sessionId, Guid.Empty });
@@ -95,7 +95,7 @@ namespace Tests
         public void TestNoOpcode()
         {
             const string expectedMessage = "Event with no Opcode";
-            Util.AssertEventAttributes<TestsEventSource>("NoOpcode", 3, EventLevel.Error, expectedMessage, TestsEventSource.Keywords.Baz | TestsEventSource.Keywords.Faz, TestsEventSource.Tasks.Boo, null);
+            AssertHelper.AssertEventAttributes<TestsEventSource>("NoOpcode", 3, EventLevel.Error, expectedMessage, TestsEventSource.Keywords.Baz | TestsEventSource.Keywords.Faz, TestsEventSource.Tasks.Boo, null);
             var context = Guid.NewGuid();
             s_testsEvents.NoOpcode(context);
             s_sink.AssertEventRecord(3, expectedMessage, new object[] { context, s_sessionId, Guid.Empty });
@@ -105,7 +105,7 @@ namespace Tests
         public void TestNativeParameters()
         {
             const string message = "context: {0}, session: {1}, session2: {2}, b: {3}, c: {4}, sb: {5}, by: {6}, i16: {7}, ui16: {8}, i32: {9}, ui32: {10}, i64: {11}, ui64: {12}, sin: {13}, d: {14}, s: {15}, g: {16}, ptr: {17}";
-            Util.AssertEventAttributes<TestsEventSource>("Parameters", 4, EventLevel.Informational, message, EventKeywords.None, EventTask.None, null);
+            AssertHelper.AssertEventAttributes<TestsEventSource>("Parameters", 4, EventLevel.Informational, message, EventKeywords.None, EventTask.None, null);
             //DateTime and byte[] are not tested due to EventAnalyzer issues that should be fixed in the next release:
             //https://github.com/mspnp/semantic-logging/pull/83
             //https://github.com/mspnp/semantic-logging/pull/94
@@ -121,12 +121,12 @@ namespace Tests
         [TestMethod]
         public void TestCustomTypes()
         {
-            Util.AssertEventAttributes<TestsEventSource>("CustomTypes", 5, EventLevel.Critical, null, EventKeywords.None, EventTask.None, null);
+            AssertHelper.AssertEventAttributes<TestsEventSource>("CustomTypes", 5, EventLevel.Critical, null, EventKeywords.None, EventTask.None, null);
             var context = Guid.NewGuid();
-            s_testsEvents.CustomTypes(context, new CustomType { Foo = "foo" }, 1.0, new AnotherCustomType() { Bar = 42 }, TestEnum.Hello);
+            s_testsEvents.CustomTypes(context, new CustomType { Foo = "foo" }, 1.0, new AnotherCustomType() { Bar = 42 }, Greeting.Hello);
             s_sink.AssertEventRecord(5, null, new object[] { context, s_sessionId, Guid.Empty, "foo", 1.0, 42, 0 });
 
-            s_testsEvents.CustomTypes(context, new CustomType { Foo = "bar" }, 4.2, new AnotherCustomType() { Bar = 1 }, TestEnum.World);
+            s_testsEvents.CustomTypes(context, new CustomType { Foo = "bar" }, 4.2, new AnotherCustomType() { Bar = 1 }, Greeting.World);
             s_sink.AssertEventRecord(5, null, new object[] { context, s_sessionId, Guid.Empty, "bar", 4.2, 1, 1 });
         }
     }

@@ -27,6 +27,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\ET4W.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -66,29 +67,28 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="EventRecord.cs" />
-    <Compile Include="EventSourceBase.cs" />
+    <Compile Include="Util\EventRecord.cs" />
     <Compile Include="Events\minimalEvents.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>minimalEvents.tt</DependentUpon>
     </Compile>
-    <Compile Include="Events\testEvents.cs">
+    <Compile Include="Events\variedEvents.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>testEvents.tt</DependentUpon>
+      <DependentUpon>variedEvents.tt</DependentUpon>
     </Compile>
     <Compile Include="Events\baseClassEvents.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>baseClassEvents.tt</DependentUpon>
     </Compile>
-    <Compile Include="EventTests.cs" />
-    <Compile Include="MemoryRetentionSink.cs" />
-    <Compile Include="MinimalEventsTests.cs" />
+    <Compile Include="Suites\VariedEventsTests.cs" />
+    <Compile Include="Util\MemoryRetentionSink.cs" />
+    <Compile Include="Suites\MinimalEventsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="EventSourceBaseTests.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="Suites\BaseClassEventsTests.cs" />
+    <Compile Include="Util\AssertHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
@@ -102,7 +102,7 @@
     </None>
     <None Include="app.config" />
     <None Include="Events\baseClassEvents.json" />
-    <None Include="Events\testEvents.json" />
+    <None Include="Events\variedEvents.json" />
     <None Include="Events\minimalEvents.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -110,9 +110,9 @@
     <None Include="_EventRegisterUsersGuide.docx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Events\testEvents.tt">
+    <None Include="Events\variedEvents.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>testEvents.cs</LastGenOutput>
+      <LastGenOutput>variedEvents.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -126,6 +126,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>baseClassEvents.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ET4W\ThisFolderWillBeCreatedByTheNugetPackage.txt" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using static System.FormattableString;
 using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Diagnostics.Tracing;
@@ -7,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Tests
 {
-    public static class Util
+    public static class AssertHelper
     {
         public static void AssertEventAttributes<T>(string eventName, int expectedId, EventLevel expectedLevel, string expectedMessage,
             EventKeywords expectedKeywords, EventTask expectedTask, EventOpcode? expectedOpcode)
@@ -33,6 +34,11 @@ namespace Tests
         public static void AssertEventRecord(this MemoryRetentionSink sink, 
             int expectedId, string expectedFormattedMessage, IList<object> expectedPayload, DateTimeOffset expectedTimestamp = default(DateTimeOffset))
         {
+            if (sink == null)
+            {
+                throw new ArgumentNullException("sink");
+            }
+
             if (expectedTimestamp == default(DateTimeOffset))
             {
                 expectedTimestamp = DateTimeOffset.UtcNow;
@@ -51,8 +57,8 @@ namespace Tests
                 Assert.AreEqual(tup.Item1, tup.Item2, "Mismatched sink payload object");
             }
 
-            Assert.IsTrue((expectedTimestamp - record.Timestamp) < TimeSpan.FromSeconds(5), 
-                $"Mismatched sink timestamp (more than 5 seconds apart). Expected: {expectedTimestamp}; Actual: {record.Timestamp}");
+            Assert.IsTrue((expectedTimestamp - record.Timestamp) < TimeSpan.FromSeconds(5),
+                Invariant($"Mismatched sink timestamp (more than 5 seconds apart). Expected: {expectedTimestamp}; Actual: {record.Timestamp}"));
 
             Assert.AreEqual(0, sink.RetainedErrors.Count, "Sink errors detected: " + String.Join(", ", sink.RetainedErrors));
         }

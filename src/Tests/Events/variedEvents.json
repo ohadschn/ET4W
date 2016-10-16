@@ -1,7 +1,7 @@
 ﻿{
   "$schema": "../../events-schema.json",
   "class": "Tests",
-  "sourceName": "OS-Test-Foo",
+  "sourceName": "OS-Test-Varied",
   "tasks": [ "Foo", "Boo" ],
   "keywords": [ "Baz", "Faz", "Raz" ],
   "customTypes": [
