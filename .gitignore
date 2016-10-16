@@ -255,3 +255,4 @@ paket-files/
 src/Tests/Events/variedEvents.cs
 src/Tests/Events/minimalEvents.cs
 src/Tests/Events/baseClassEvents.cs
+src/NugetTests/events.cs

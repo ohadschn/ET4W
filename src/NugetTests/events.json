@@ -1,0 +1,11 @@
+﻿{
+  "$schema": "ET4W/events-schema.json",
+  "class": "Nuget",
+  "sourceName": "OS-Test-Nuget",
+  "events": [
+    {
+      "id": 1,
+      "name": "Foo"
+    }
+  ]
+}
