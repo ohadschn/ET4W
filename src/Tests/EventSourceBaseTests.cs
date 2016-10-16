@@ -8,12 +8,12 @@ namespace Tests
     [TestClass]
     public class EventSourceBaseTests
     {
-        private static BaseClassEvents m_baseClassEvents;
+        private static BaseClassEvents s_baseClassEvents;
 
         [ClassInitialize]
         public static void BeforeAll(TestContext context)
         {
-            m_baseClassEvents = new BaseClassEvents();
+            s_baseClassEvents = new BaseClassEvents();
         }
 
         [TestCleanup]
@@ -35,7 +35,7 @@ namespace Tests
 
             Assert.AreEqual("OS-Test-BaseClass", typeof(BaseClassEventSource).GetCustomAttribute<EventSourceAttribute>().Name, "Mismatched event source name");
             Util.AssertEventAttributes<BaseClassEventSource>("Foo", 10, EventLevel.Informational, "Foo: {0}", EventKeywords.None, EventTask.None, null);
-            m_baseClassEvents.Foo("bar");
+            s_baseClassEvents.Foo("bar");
             BaseClassEventSource.Log.Sink.AssertEventRecord(10, "Foo: bar", new object[] { "bar" });
         }
     }

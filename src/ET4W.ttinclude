@@ -50,14 +50,14 @@ namespace <#= nameSpace #>
 <#+
 		foreach (var customType in eventDefinitions.CustomTypes)
 {#>
-		private <#= Util.GetConverterType(customType) #> m_<#= Util.GetConverterName(customType.FullyQualifiedName) #>;
+		private readonly <#= Util.GetConverterType(customType) #> m_<#= Util.GetConverterName(customType.FullyQualifiedName) #>;
 <#+ } #>
 
 		//common parameter generators (if exist)
 <#+
 		foreach (var commonParam in eventDefinitions.CommonParameters.Where(cp => cp.Generated))
 {#>
-		private <#= Util.GetGeneratorType(commonParam) #> m_<#= Util.GetGeneratorName(commonParam) #>;
+		private readonly <#= Util.GetGeneratorType(commonParam) #> m_<#= Util.GetGeneratorName(commonParam) #>;
 <#+ } #>
 		
 		//ctor

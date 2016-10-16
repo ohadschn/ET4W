@@ -5,7 +5,7 @@ namespace Tests
 {
     public abstract class EventSourceBase : EventSource
     {
-        private ObservableEventListener m_listener;
+        private readonly ObservableEventListener m_listener;
         public MemoryRetentionSink Sink { get; private set; }
 
         public void DisposeListener()

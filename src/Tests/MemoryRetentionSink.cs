@@ -25,7 +25,7 @@ namespace Tests
         public void OnNext(EventEntry value)
         {
             RetainedEvents.Add(
-                new EventRecord(value.EventId, value.Schema.EventName, value.FormattedMessage, new ReadOnlyCollection<object>(value.Payload.ToArray()), value.Timestamp));
+                new EventRecord(value.EventId, value.FormattedMessage, new ReadOnlyCollection<object>(value.Payload.ToArray()), value.Timestamp));
         }
 
         public void OnError(Exception error)

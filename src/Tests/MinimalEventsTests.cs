@@ -9,29 +9,29 @@ namespace Tests
     [TestClass]
     public class MinimalEventsTests
     {
-        private static ObservableEventListener m_listener;
-        private static MemoryRetentionSink m_sink;
-        private static MinimalEvents m_minimialEvents;
+        private static ObservableEventListener s_listener;
+        private static MemoryRetentionSink s_sink;
+        private static MinimalEvents s_minimialEvents;
 
         [ClassInitialize]
         public static void BeforeAll(TestContext context)
         {
-            m_minimialEvents = new MinimalEvents();
-            m_listener = new ObservableEventListener();
-            m_listener.EnableEvents(MinimalEventSource.Log, EventLevel.Verbose);
-            m_sink = m_listener.RetainEventRecords().Sink;
+            s_minimialEvents = new MinimalEvents();
+            s_listener = new ObservableEventListener();
+            s_listener.EnableEvents(MinimalEventSource.Log, EventLevel.Verbose);
+            s_sink = s_listener.RetainEventRecords().Sink;
         }
 
         [TestCleanup]
         public void AfterEach()
         {
-            m_sink.Clear();
+            s_sink.Clear();
         }
 
         [ClassCleanup]
         public static void AfterAll()
         {
-            m_listener.Dispose();
+            s_listener.Dispose();
         }
 
         [TestMethod]
@@ -39,8 +39,8 @@ namespace Tests
         {
             Assert.AreEqual("OS-Test-Minimal", typeof(MinimalEventSource).GetCustomAttribute<EventSourceAttribute>().Name, "Mismatched event source name");
             Util.AssertEventAttributes<MinimalEventSource>("Foo", 1, EventLevel.Informational, null, EventKeywords.None, EventTask.None, null);
-            m_minimialEvents.Foo();
-            m_sink.AssertEventRecord(1, null, new object[0]);
+            s_minimialEvents.Foo();
+            s_sink.AssertEventRecord(1, null, new object[0]);
         }
     }
 }

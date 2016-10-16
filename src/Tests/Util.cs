@@ -46,7 +46,7 @@ namespace Tests
             Assert.AreEqual(expectedId, record.Id, "Mismatched sink event ID");
             Assert.AreEqual(expectedFormattedMessage, record.FormattedMessage, "Mismatched sink formatted message");
 
-            foreach (var tup in expectedPayload.Zip(record.Payload, (o1, o2) => Tuple.Create(o1, o2)))
+            foreach (var tup in expectedPayload.Zip(record.Payload, Tuple.Create))
             {
                 Assert.AreEqual(tup.Item1, tup.Item2, "Mismatched sink payload object");
             }
