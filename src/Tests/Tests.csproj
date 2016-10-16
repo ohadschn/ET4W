@@ -67,20 +67,27 @@
   </Choose>
   <ItemGroup>
     <Compile Include="EventRecord.cs" />
-    <Compile Include="Events\MinimalTest.cs">
+    <Compile Include="EventSourceBase.cs" />
+    <Compile Include="Events\minimalEvents.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>MinimalTest.tt</DependentUpon>
+      <DependentUpon>minimalEvents.tt</DependentUpon>
     </Compile>
-    <Compile Include="Events\Test.cs">
+    <Compile Include="Events\testEvents.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Test.tt</DependentUpon>
+      <DependentUpon>testEvents.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Events\baseClassEvents.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>baseClassEvents.tt</DependentUpon>
     </Compile>
     <Compile Include="EventTests.cs" />
     <Compile Include="MemoryRetentionSink.cs" />
     <Compile Include="MinimalEventsTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="EventSourceBaseTests.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -94,7 +101,8 @@
       <Link>EventSources\events-schema.json</Link>
     </None>
     <None Include="app.config" />
-    <None Include="Events\events.json" />
+    <None Include="Events\baseClassEvents.json" />
+    <None Include="Events\testEvents.json" />
     <None Include="Events\minimalEvents.json" />
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -102,15 +110,21 @@
     <None Include="_EventRegisterUsersGuide.docx" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Events\Test.tt">
+    <None Include="Events\testEvents.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Test.cs</LastGenOutput>
+      <LastGenOutput>testEvents.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Events\MinimalTest.tt">
+    <None Include="Events\minimalEvents.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>MinimalTest.cs</LastGenOutput>
+      <LastGenOutput>minimalEvents.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Events\baseClassEvents.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>baseClassEvents.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <Choose>

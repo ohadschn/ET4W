@@ -1,0 +1,18 @@
+﻿{
+  "$schema": "../../events-schema.json",
+  "class": "BaseClass",
+  "sourceName": "OS-Test-BaseClass",
+  "events": [
+    {
+      "id": 10,
+      "name": "Foo",
+      "message": "Foo: {0}",
+      "parameters": [
+        {
+          "name": "foo",
+          "type": "String"
+        }
+      ]
+    }
+  ]
+}

@@ -68,7 +68,7 @@ namespace Tests
         [TestMethod]
         public void TestSourceName()
         {
-            Assert.AreEqual("OS-Test-Foo", typeof(TestsEventSource).GetCustomAttribute<EventSourceAttribute>().Name);
+            Assert.AreEqual("OS-Test-Foo", typeof(TestsEventSource).GetCustomAttribute<EventSourceAttribute>().Name, "Mismatched event source name");
         }
 
         [TestMethod]

@@ -10,9 +10,9 @@
 <#@ import namespace="System.Diagnostics.Tracing" #>
 <#@ import namespace="System.Globalization" #>
 <#+
-private void WriteEventSource(string eventsFile, string nameSpace, Type baseType = null)
+private void WriteEventSource(string eventsFile, string nameSpace, string baseTypeFullyQualifiedName = null)
 {
-	baseType = baseType ?? typeof(EventSource);
+	baseTypeFullyQualifiedName = baseTypeFullyQualifiedName ?? typeof(EventSource).FullName;
 	EventDefinitions eventDefinitions = null;
 	var dcjs = new DataContractJsonSerializer(typeof(EventDefinitions));
 
@@ -96,7 +96,7 @@ namespace <#= nameSpace #>
 
 	//event source
 	[EventSource(Name = "<#= eventDefinitions.SourceName #>")]
-	public sealed class <#= eventSourceClassName #> : <#= baseType.FullName #>
+	public sealed class <#= eventSourceClassName #> : <#= baseTypeFullyQualifiedName #>
 	{
 		//static log property for easy access
 		public static readonly <#= eventSourceClassName #> Log = new <#= eventSourceClassName #>();
