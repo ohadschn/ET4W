@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Tests.Events;
 using System.Diagnostics.Tracing;
 using Microsoft.Practices.EnterpriseLibrary.SemanticLogging;
+using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Utility;
 
 namespace Tests
 {
@@ -32,6 +33,12 @@ namespace Tests
         public static void AfterAll()
         {
             s_listener.Dispose();
+        }
+
+        [TestMethod]
+        public void AnalyzeEventSource()
+        {
+            EventSourceAnalyzer.InspectAll(MinimalEventSource.Log);
         }
 
         [TestMethod]
