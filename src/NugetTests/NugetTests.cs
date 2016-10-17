@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.Practices.EnterpriseLibrary.SemanticLogging.Utility;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace NugetTests
 {
@@ -6,7 +7,13 @@ namespace NugetTests
     public class NugetTests
     {
         [TestMethod]
-        public void TestMethod1()
+        public void AnalyzeNugetEvents()
+        {
+            EventSourceAnalyzer.InspectAll(NugetEventSource.Log);
+        }
+
+        [TestMethod]
+        public void TestNugetEvents()
         {
             new NugetEvents().Foo();
         }
