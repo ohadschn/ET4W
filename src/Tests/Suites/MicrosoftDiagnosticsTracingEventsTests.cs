@@ -2,7 +2,7 @@
 using MicrosoftDiagnosticsTracingTests.Events;
 using System;
 
-namespace Tests.Suites
+namespace Tests
 {
     [TestClass]
     public class MicrosoftDiagnosticsTracingEventsTests

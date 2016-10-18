@@ -71,12 +71,18 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Events\microsoftDiagnosticsTracingBaseClassEvents.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>microsoftDiagnosticsTracingBaseClassEvents.tt</DependentUpon>
+    </Compile>
     <Compile Include="Events\microsoftDiagnosticsTracingEvents.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>microsoftDiagnosticsTracingEvents.tt</DependentUpon>
     </Compile>
     <Compile Include="Suites\MicrosoftDiagnosticsTracingEventsTests.cs" />
+    <Compile Include="Suites\MicrosoftDiagnosticsTracingBaseClassEventsTests.cs" />
     <Compile Include="Util\EventRecord.cs" />
     <Compile Include="Events\minimalEvents.cs">
       <AutoGen>True</AutoGen>
@@ -140,6 +146,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ET4W\ThisFolderWillBeCreatedByTheNugetPackage.txt" />
+    <None Include="Events\microsoftDiagnosticsTracingBaseClassEvents.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>microsoftDiagnosticsTracingBaseClassEvents.cs</LastGenOutput>
+    </None>
     <None Include="Events\microsoftDiagnosticsTracingEvents.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>microsoftDiagnosticsTracingEvents.cs</LastGenOutput>
