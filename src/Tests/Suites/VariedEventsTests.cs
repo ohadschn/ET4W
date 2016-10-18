@@ -75,7 +75,7 @@ namespace Tests
         public void TestNoKeywords()
         {
             const string expectedMessage = "Event with no keywords";
-            AssertHelper.AssertEventAttributes<TestsEventSource>("FooInfo", 1, EventChannel.None, EventLevel.Informational, expectedMessage, EventKeywords.None, TestsEventSource.Tasks.Foo, EventOpcode.Info);
+            AssertHelper.AssertEventAttributes<TestsEventSource>("FooInfo", 1, 0, EventChannel.None, EventLevel.Informational, expectedMessage, EventKeywords.None, TestsEventSource.Tasks.Foo, EventOpcode.Info);
             var context = Guid.NewGuid();
             s_testsEvents.FooInfo(context);
             s_sink.AssertEventRecord(1, expectedMessage, new object[] { context, s_sessionId, Guid.Empty });
@@ -85,7 +85,7 @@ namespace Tests
         public void TestNoTask()
         {
             const string expectedMessage = "Event with no task";
-            AssertHelper.AssertEventAttributes<TestsEventSource>("NoTask", 2, EventChannel.None, EventLevel.Warning, expectedMessage, TestsEventSource.Keywords.Raz, EventTask.None, EventOpcode.Info);
+            AssertHelper.AssertEventAttributes<TestsEventSource>("NoTask", 2, 0, EventChannel.None, EventLevel.Warning, expectedMessage, TestsEventSource.Keywords.Raz, EventTask.None, EventOpcode.Info);
             var context = Guid.NewGuid();
             s_testsEvents.NoTask(context);
             s_sink.AssertEventRecord(2, expectedMessage, new object[] { context, s_sessionId, Guid.Empty });
@@ -95,7 +95,7 @@ namespace Tests
         public void TestNoOpcode()
         {
             const string expectedMessage = "Event with no Opcode";
-            AssertHelper.AssertEventAttributes<TestsEventSource>("NoOpcode", 3, EventChannel.None, EventLevel.Error, expectedMessage, TestsEventSource.Keywords.Baz | TestsEventSource.Keywords.Faz, TestsEventSource.Tasks.Boo, null);
+            AssertHelper.AssertEventAttributes<TestsEventSource>("NoOpcode", 3, 0, EventChannel.None, EventLevel.Error, expectedMessage, TestsEventSource.Keywords.Baz | TestsEventSource.Keywords.Faz, TestsEventSource.Tasks.Boo, null);
             var context = Guid.NewGuid();
             s_testsEvents.NoOpcode(context);
             s_sink.AssertEventRecord(3, expectedMessage, new object[] { context, s_sessionId, Guid.Empty });
@@ -105,7 +105,7 @@ namespace Tests
         public void TestNativeParameters()
         {
             const string message = "context: {0}, session: {1}, session2: {2}, b: {3}, c: {4}, sb: {5}, by: {6}, i16: {7}, ui16: {8}, i32: {9}, ui32: {10}, i64: {11}, ui64: {12}, sin: {13}, d: {14}, s: {15}, g: {16}, ptr: {17}";
-            AssertHelper.AssertEventAttributes<TestsEventSource>("Parameters", 4, EventChannel.None, EventLevel.Informational, message, EventKeywords.None, EventTask.None, null);
+            AssertHelper.AssertEventAttributes<TestsEventSource>("Parameters", 4, 0, EventChannel.None, EventLevel.Informational, message, EventKeywords.None, EventTask.None, null);
             //DateTime and byte[] are not tested due to EventAnalyzer issues that should be fixed in the next release:
             //https://github.com/mspnp/semantic-logging/pull/83
             //https://github.com/mspnp/semantic-logging/pull/94
@@ -121,7 +121,7 @@ namespace Tests
         [TestMethod]
         public void TestCustomTypes()
         {
-            AssertHelper.AssertEventAttributes<TestsEventSource>("CustomTypes", 5, EventChannel.None, EventLevel.Critical, null, EventKeywords.None, EventTask.None, null);
+            AssertHelper.AssertEventAttributes<TestsEventSource>("CustomTypes", 5, 0, EventChannel.None, EventLevel.Critical, null, EventKeywords.None, EventTask.None, null);
             var context = Guid.NewGuid();
             s_testsEvents.CustomTypes(context, new CustomType { Foo = "foo" }, 1.0, new AnotherCustomType() { Bar = 42 }, Greeting.Hello);
             s_sink.AssertEventRecord(5, null, new object[] { context, s_sessionId, Guid.Empty, "foo", 1.0, 42, 0 });
@@ -133,7 +133,7 @@ namespace Tests
         [TestMethod]
         public void TestChannels()
         {
-            AssertHelper.AssertEventAttributes<TestsEventSource>("Channel", 6, EventChannel.Admin, EventLevel.Warning, "Danger, Will Robinson!", EventKeywords.None, EventTask.None, null);
+            AssertHelper.AssertEventAttributes<TestsEventSource>("Channel", 6, 100, EventChannel.Admin, EventLevel.Warning, "Danger, Will Robinson!", EventKeywords.None, EventTask.None, null);
             var context = Guid.NewGuid();
             s_testsEvents.Channel(context);
             s_sink.AssertEventRecord(6, "Danger, Will Robinson!", new object[] { context, s_sessionId, Guid.Empty });

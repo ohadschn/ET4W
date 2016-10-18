@@ -89,6 +89,7 @@
       "properties": {
         "id": { "type": "integer" },
         "name": { "$ref": "#/definitions/identifier" },
+        "version": { "type": "integer" },
         "channel": { "$ref": "#/definitions/etwChannel" },
         "level": { "$ref": "#/definitions/etwEventLevel" },
         "message": { "type": "string" },

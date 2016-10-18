@@ -155,6 +155,7 @@
     {
       "id": 6,
       "name": "Channel",
+      "version": 100,
       "level": "Warning",
       "channel": "Admin",
       "message": "Danger, Will Robinson!"

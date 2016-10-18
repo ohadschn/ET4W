@@ -133,6 +133,10 @@ namespace <#= nameSpace #>
 	foreach (var eventDef in eventDefinitions.Events)
 	{ #>
 		[Event(<#= eventDef.Id #>
+<#+ if (eventDef.Version != 0)
+{ #>
+			,Version=<#= eventDef.Version #>
+<#+ } #>
 <#+ if (eventDef.Channel != null)
 { #>
 			,Channel=EventChannel.<#= eventDef.Channel #>
@@ -415,6 +419,9 @@ class EventDefinition
 	
 	[DataMember(Name="name", IsRequired=true)]
     public string Name { get; private set; }
+
+	[DataMember(Name="version")]
+    public byte Version { get; private set; }
 
 	[DataMember(Name="level")]
     private string LevelValue { get; set; }

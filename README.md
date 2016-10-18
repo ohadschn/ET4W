@@ -82,7 +82,7 @@ You might want to enrich your events with some more metadata:
 * [Keywords](https://msdn.microsoft.com/en-us/library/windows/desktop/dd996915(v=vs.85).aspx) can be used for event classification.
 * [Tasks and Opcodes](https://msdn.microsoft.com/en-us/library/windows/desktop/dd996918(v=vs.85).aspx) can be used for logical event grouping.
 
-Here's how an event with all the above specified would look like:
+You can also set event versions for manifest compatibility checks (more details [here](http://blogs.msmvps.com/kathleen/2014/01/24/how-are-event-parameters-best-used-to-create-an-intuitive-custom-evnetsourcetrace/)). Here's how an event with all possible metadata specified would look like:
 
 ```json
 {
@@ -95,6 +95,7 @@ Here's how an event with all the above specified would look like:
    {
     "id": 1,
     "name": "Foo",
+    "version": 2,
     "channel": "Admin",
     "level": "Warning",
     "keywords": [ "Key", "Word" ],

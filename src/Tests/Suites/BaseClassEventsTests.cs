@@ -60,7 +60,7 @@ namespace Tests
             Assert.IsInstanceOfType(BaseClassEventSource.Log, typeof(EventSourceBase), "Event source class doesn't inherit from the expected base class");
 
             Assert.AreEqual("OS-Test-BaseClass", typeof(BaseClassEventSource).GetCustomAttribute<EventSourceAttribute>().Name, "Mismatched event source name");
-            AssertHelper.AssertEventAttributes<BaseClassEventSource>("Foo", 10, EventChannel.None, EventLevel.Informational, "Foo: {0}", EventKeywords.None, EventTask.None, null);
+            AssertHelper.AssertEventAttributes<BaseClassEventSource>("Foo", 10, 0, EventChannel.None, EventLevel.Informational, "Foo: {0}", EventKeywords.None, EventTask.None, null);
             s_baseClassEvents.Foo("bar");
             BaseClassEventSource.Log.Sink.AssertEventRecord(10, "Foo: bar", new object[] { "bar" });
         }
