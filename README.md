@@ -29,6 +29,7 @@ As an added bonus, this approach allows you to leverage the same event JSON for 
 3. Create a new JSON file and specify your events inside it according to the [schema](https://github.com/ohadschn/ET4W/blob/master/src/events-schema.json) (see the next section for a detailed walkthrough).
 4. Create a new blank T4 Template (*.tt*) file, which will be used to generate your event classes.
 5. Replace the contents of the *.tt* file you just created with the following generation code: 
+
    ```csharp
    <#@ template debug="false" hostspecific="true" language="C#" #>
    <#@ output extension=".cs" #>
