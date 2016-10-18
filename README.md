@@ -265,7 +265,7 @@ Some advanced scenarios require the generated raw event source class to inherit 
 <#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ output extension=".cs" #>
 <#@ include file="ET4W\ET4W.ttinclude" #>
-<# WriteEventSource(Host.ResolvePath("events.json"), "MyNamespace", baseTypeFullyQualifiedName: "UtilEventSource"); #>
+<# WriteEventSource(Host.ResolvePath("events.json"), "MyNamespace", baseTypeFullyQualifiedName: "UtilEventSrc"); #>
 ```
 
 For more information about utility event source classes and some of the scenarios in which they can come in handy, consult the *_EventSourceUsersGuide.docx* document in the [Microsoft.Diagnostics.Tracing.EventSource](https://www.nuget.org/packages/Microsoft.Diagnostics.Tracing.EventSource/) package (the document is added to your project automatically when the package is installed). Example usage can be found in [baseClassEvents.tt](https://github.com/ohadschn/ET4W/blob/master/src/Tests/Events/baseClassEvents.tt) and [BaseClassEventsTests.cs](https://github.com/ohadschn/ET4W/blob/master/src/Tests/Suites/BaseClassEventsTests.cs). 
