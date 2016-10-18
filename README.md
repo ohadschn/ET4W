@@ -74,12 +74,13 @@ var events = new MinimalEvents();
 events.Foo();
 ```
 
-### Level, keywords, tasks, and opcodes
+### Event metadata
 You might want to enrich your events with some more metadata:
 
-* [(Severity) Levels](https://msdn.microsoft.com/en-us/library/windows/desktop/dd996917(v=vs.85).aspx) can be used for severity or verbosity indication.
+* [Channels](https://msdn.microsoft.com/en-us/library/windows/desktop/dd996911(v=vs.85).aspx) can be used to target the audience of your events.
+* [Severity Levels](https://msdn.microsoft.com/en-us/library/windows/desktop/dd996917(v=vs.85).aspx) can be used for severity or verbosity indication.
 * [Keywords](https://msdn.microsoft.com/en-us/library/windows/desktop/dd996915(v=vs.85).aspx) can be used for event classification.
-* [Tasks and Opcode](https://msdn.microsoft.com/en-us/library/windows/desktop/dd996918(v=vs.85).aspx) can be used for logical event grouping.
+* [Tasks and Opcodes](https://msdn.microsoft.com/en-us/library/windows/desktop/dd996918(v=vs.85).aspx) can be used for logical event grouping.
 
 Here's how an event with all the above specified would look like:
 
@@ -92,12 +93,13 @@ Here's how an event with all the above specified would look like:
   "tasks": [ "Eat" ],
   "events": [
    {
-	"id": 1,
-	"name": "Foo",
-	"level": "Warning",
-	"keywords": [ "Key", "Word" ],
-	"task": "Eat",
-	"opcode": "Info"
+    "id": 1,
+    "name": "Foo",
+    "channel": "Admin",
+    "level": "Warning",
+    "keywords": [ "Key", "Word" ],
+    "task": "Eat",
+    "opcode": "Info"
    }
   ]
 }

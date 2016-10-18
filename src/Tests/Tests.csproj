@@ -95,10 +95,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\ET4W.ttinclude">
-      <Link>EventSources\ET4W.ttinclude</Link>
+      <Link>ET4W\ET4W.ttinclude</Link>
     </None>
     <None Include="..\events-schema.json">
-      <Link>EventSources\events-schema.json</Link>
+      <Link>ET4W\events-schema.json</Link>
     </None>
     <None Include="app.config" />
     <None Include="Events\baseClassEvents.json" />

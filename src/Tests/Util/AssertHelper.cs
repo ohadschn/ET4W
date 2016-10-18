@@ -10,11 +10,12 @@ namespace Tests
 {
     public static class AssertHelper
     {
-        public static void AssertEventAttributes<T>(string eventName, int expectedId, EventLevel expectedLevel, string expectedMessage,
+        public static void AssertEventAttributes<T>(string eventName, int expectedId, EventChannel expectedChannel, EventLevel expectedLevel, string expectedMessage,
             EventKeywords expectedKeywords, EventTask expectedTask, EventOpcode? expectedOpcode)
         {
             var eventAttribute = typeof(T).GetMethod(eventName).GetCustomAttribute<EventAttribute>();
             Assert.AreEqual(expectedId, eventAttribute.EventId, "Mismatched attribute event ID");
+            Assert.AreEqual(expectedChannel, eventAttribute.Channel, "Mismatched attribute channel");
             Assert.AreEqual(expectedLevel, eventAttribute.Level, "Mismatched attribute event level");
             Assert.AreEqual(expectedMessage, eventAttribute.Message, "Mismatched attribute event message");
             Assert.AreEqual(expectedKeywords, eventAttribute.Keywords, "Mismatched attribute event keywords");

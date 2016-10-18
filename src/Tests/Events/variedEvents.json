@@ -151,6 +151,13 @@
           "customType": "Tests.Greeting"
         }
       ]
+    },
+    {
+      "id": 6,
+      "name": "Channel",
+      "level": "Warning",
+      "channel": "Admin",
+      "message": "Danger, Will Robinson!"
     }
   ]
 }

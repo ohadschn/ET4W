@@ -45,7 +45,7 @@ namespace Tests
         public void TestMinimalEvents()
         {
             Assert.AreEqual("OS-Test-Minimal", typeof(MinimalEventSource).GetCustomAttribute<EventSourceAttribute>().Name, "Mismatched event source name");
-            AssertHelper.AssertEventAttributes<MinimalEventSource>("Foo", 1, EventLevel.Informational, null, EventKeywords.None, EventTask.None, null);
+            AssertHelper.AssertEventAttributes<MinimalEventSource>("Foo", 1, EventChannel.None, EventLevel.Informational, null, EventKeywords.None, EventTask.None, null);
             s_minimialEvents.Foo();
             s_sink.AssertEventRecord(1, null, new object[0]);
         }

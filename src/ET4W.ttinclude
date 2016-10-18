@@ -133,6 +133,10 @@ namespace <#= nameSpace #>
 	foreach (var eventDef in eventDefinitions.Events)
 	{ #>
 		[Event(<#= eventDef.Id #>
+<#+ if (eventDef.Channel != null)
+{ #>
+			,Channel=EventChannel.<#= eventDef.Channel #>
+<#+ } #>
 <#+ if (eventDef.Keywords.Length > 0)
 { #>
 			,Keywords=<#= String.Join(" | ", eventDef.Keywords.Select(k => "Keywords." + k)) #>
@@ -415,7 +419,12 @@ class EventDefinition
 	[DataMember(Name="level")]
     private string LevelValue { get; set; }
 
-    public EventLevel? Level { get { return (LevelValue == null) ? null : (EventLevel?)Enum.Parse(typeof(EventLevel), LevelValue);} }
+    public EventLevel? Level { get { return (LevelValue == null) ? null : (EventLevel?)Enum.Parse(typeof(EventLevel), LevelValue); } }
+
+	[DataMember(Name="channel")]
+	private string ChannelValue {get; set; }
+
+	public EventChannel? Channel {get { return (ChannelValue == null) ? null : (EventChannel?)Enum.Parse(typeof(EventChannel), ChannelValue); } }
 
 	[DataMember(Name="message")]
     public string Message { get; private set; }
