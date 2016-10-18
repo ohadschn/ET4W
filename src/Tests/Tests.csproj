@@ -38,6 +38,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Diagnostics.Tracing.EventSource, Version=1.1.28.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Diagnostics.Tracing.EventSource.Redist.1.1.28\lib\net46\Microsoft.Diagnostics.Tracing.EventSource.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.Practices.EnterpriseLibrary.SemanticLogging, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\EnterpriseLibrary.SemanticLogging.2.0.1406.1\lib\net45\Microsoft.Practices.EnterpriseLibrary.SemanticLogging.dll</HintPath>
       <Private>True</Private>
@@ -67,6 +71,12 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="Events\microsoftDiagnosticsTracingEvents.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>microsoftDiagnosticsTracingEvents.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Suites\MicrosoftDiagnosticsTracingEventsTests.cs" />
     <Compile Include="Util\EventRecord.cs" />
     <Compile Include="Events\minimalEvents.cs">
       <AutoGen>True</AutoGen>
@@ -108,6 +118,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="_EventRegisterUsersGuide.docx" />
+    <None Include="_EventSourceUsersGuide.docx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Events\variedEvents.tt">
@@ -129,6 +140,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="ET4W\ThisFolderWillBeCreatedByTheNugetPackage.txt" />
+    <None Include="Events\microsoftDiagnosticsTracingEvents.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>microsoftDiagnosticsTracingEvents.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

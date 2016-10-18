@@ -255,4 +255,5 @@ paket-files/
 src/Tests/Events/variedEvents.cs
 src/Tests/Events/minimalEvents.cs
 src/Tests/Events/baseClassEvents.cs
+src/Tests/Events/microsoftDiagnosticsTracingEvents.cs
 src/NugetTests/events.cs

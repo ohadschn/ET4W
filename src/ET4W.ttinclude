@@ -10,9 +10,9 @@
 <#@ import namespace="System.Diagnostics.Tracing" #>
 <#@ import namespace="System.Globalization" #>
 <#+
-private void WriteEventSource(string eventsFile, string nameSpace, string baseTypeFullyQualifiedName = null)
+private void WriteEventSource(string eventsFile, string nameSpace, bool useMicrosoftDiagnosticsTracing = false, string baseTypeFullyQualifiedName = null)
 {
-	baseTypeFullyQualifiedName = baseTypeFullyQualifiedName ?? typeof(EventSource).FullName;
+	baseTypeFullyQualifiedName = baseTypeFullyQualifiedName ?? (useMicrosoftDiagnosticsTracing ? "Microsoft.Diagnostics.Tracing.EventSource" : typeof(EventSource).FullName);
 	EventDefinitions eventDefinitions = null;
 	var dcjs = new DataContractJsonSerializer(typeof(EventDefinitions));
 
@@ -39,7 +39,7 @@ private void WriteEventSource(string eventsFile, string nameSpace, string baseTy
 //--------------------------------------------------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.Tracing;
+using <#= useMicrosoftDiagnosticsTracing ? "Microsoft.Diagnostics.Tracing" : "System.Diagnostics.Tracing" #>;
 
 namespace <#= nameSpace #>
 {	

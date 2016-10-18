@@ -246,8 +246,27 @@ Note how the `requestId` and `bar` parameters are provided at the call site, whe
 ### Additional JSON samples
 For more event JSON samples see: [https://github.com/ohadschn/ET4W/tree/master/src/Tests/Events](https://github.com/ohadschn/ET4W/tree/master/src/Tests/Events).
 
+## Microsoft.Diagnostics.Tracing
+The [Microsoft EventSource Library](https://www.nuget.org/packages/Microsoft.Diagnostics.Tracing.EventSource) NuGet package contains an `EventSource` implementation that provides more features than its `System.Diagnostics.Tracing` parallel. For example, it can be used to bring channel support to projects targeting .NET 4.5.1 or earlier (since this feature was only introduced in .NET 4.6).
+
+ET4W supports `Microsoft.Diagnostics.Tracing` by accepting an additional (optional) `useMicrosoftDiagnosticsTracing` parmeter in *ET4W.ttinclude*'s `WriteEventSource` method (used in the last control block of the event generation *.tt* file):
+
+```csharp
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ include file="ET4W\ET4W.ttinclude" #>
+<# WriteEventSource(Host.ResolvePath("events.json"), "MyNamespace", useMicrosoftDiagnosticsTracing: true); #>
+```
+
 ## Generating event sources that inherit from utility event source classes
-Some advanced scenarios require the generated raw event source class to inherit from a custom class that in turn inherits from `EventSource` (rather than inherit from `EventSource` directly, as is done by default). ET4W supports these scenarios by accepting an additional (optional) `baseTypeFullyQualifiedName` parameter in *ET4W.ttinclude*'s `WriteEventSource` method (used in the last control block of the event generation *.tt* file). 
+Some advanced scenarios require the generated raw event source class to inherit from a custom class that in turn inherits from `EventSource` (rather than inherit from `EventSource` directly, as is done by default). ET4W supports these scenarios by accepting an additional (optional) `baseTypeFullyQualifiedName` parameter in *ET4W.ttinclude*'s `WriteEventSource` method (used in the last control block of the event generation *.tt* file):
+
+```csharp
+<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ include file="ET4W\ET4W.ttinclude" #>
+<# WriteEventSource(Host.ResolvePath("events.json"), "MyNamespace", baseTypeFullyQualifiedName: "MyUtilEventSource"); #>
+```
 
 For more information about utility event source classes and some of the scenarios in which they can come in handy, consult the *_EventSourceUsersGuide.docx* document in the [Microsoft.Diagnostics.Tracing.EventSource](https://www.nuget.org/packages/Microsoft.Diagnostics.Tracing.EventSource/) package (the document is added to your project automatically when the package is installed). Example usage can be found in [baseClassEvents.tt](https://github.com/ohadschn/ET4W/blob/master/src/Tests/Events/baseClassEvents.tt) and [BaseClassEventsTests.cs](https://github.com/ohadschn/ET4W/blob/master/src/Tests/Suites/BaseClassEventsTests.cs). 
 

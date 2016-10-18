@@ -1,4 +1,4 @@
 ﻿<#@ template debug="false" hostspecific="true" language="C#" #>
 <#@ output extension=".cs" #>
 <#@ include file="..\..\ET4W.ttinclude" #>
-<# WriteEventSource(Host.ResolvePath("baseClassEvents.json"), "Tests.Events", "Tests.EventSourceBase"); #>
+<# WriteEventSource(Host.ResolvePath("baseClassEvents.json"), "Tests.Events", baseTypeFullyQualifiedName: "Tests.EventSourceBase"); #>
