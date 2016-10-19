@@ -248,7 +248,7 @@ private void ValidateEventDefinitions(EventDefinitions eventDefinitions)
 			else if (!String.Equals(eventDef.Task + eventDef.Opcode, eventDef.Name, StringComparison.Ordinal))
             {
 				Warning(GetEventValidationErrorMessage(eventDef, 
-					"Opcode and Task are defined, but the event's name is not their concatenation (see http://blogs.msmvps.com/kathleen/2014/01/24/how-are-event-parameters-best-used-to-create-an-intuitive-custom-evnetsourcetrace/)"));
+					"Task and opcode are defined, but the event's name is not their concatenation (see http://blogs.msmvps.com/kathleen/2014/01/24/how-are-event-parameters-best-used-to-create-an-intuitive-custom-evnetsourcetrace/)"));
             }
         }
 	}
