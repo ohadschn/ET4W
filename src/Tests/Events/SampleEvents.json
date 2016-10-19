@@ -1,0 +1,25 @@
+﻿
+
+  {
+    "$schema": "ET4W/events-schema.json",
+    "class": "Sample",
+    "sourceName": "OS-Samples",
+    "tasks": ["Measure"],
+    "keywords": ["Key","Word"],
+    "events": [
+      {
+        "id": 1,
+        "name": "MeasureStart",
+        "keywords": ["Key", "Word"],
+        "task": "Measure",
+        "message": "foo: {0}",
+        "parameters": [
+          {
+            "name": "foo",
+            "type": "Int32"
+          }
+        ]
+      }
+    ]
+  }
+
