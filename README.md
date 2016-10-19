@@ -5,7 +5,7 @@ By authoring a simple JSON file, you hit the ground running with full-fledged [`
 
 A full [JSON schema](https://github.com/ohadschn/ET4W/blob/master/src/events-schema.json) is included for in-editor validation and auto-completion (supported in Visual Studio and other editors). Further validation takes place at generation time.
 
-![JSON editing experience](https://raw.githubusercontent.com/ohadschn/ET4W/master/docs/JsonEditing-cropped.png)
+![JSON editing experience](Transformation.png)
 
 ## Why ET4W
 ETW is the best tracing solution for the Windows platform, period. It is unmatched in performance and reliability. More and more tools are built to analyze its events to astounding depth. Microsoft explicitly recommends it for almost any logging purpose.
