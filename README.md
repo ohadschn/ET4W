@@ -1,3 +1,5 @@
+[![Version](https://img.shields.io/nuget/v/OhadSoft.ET4W.svg)](https://www.nuget.org/packages/OhadSoft.ET4W/)
+
 # ET4W
 ET4W is a [T4 Text Template](https://msdn.microsoft.com/en-us/library/bb126445.aspx) code generator for C# [ETW (Event Tracing for Windows)](https://msdn.microsoft.com/en-us/library/dn774985(v=pandp.20).aspx#_Overview_of_custom) classes.
 
