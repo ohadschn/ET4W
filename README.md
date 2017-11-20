@@ -277,4 +277,4 @@ For more information about utility event source classes and some of the scenario
 .NET's `EventSource` and ET4W take away most of the pain of using ETW, but a good understanding of its fundamentals is still required in order to use it effectively. The following blog post should help you hit the ground running, and includes links to various additional resources: [https://www.ohadsoft.com/2014/10/getting-started-with-etw-using-nets-eventsource/](https://www.ohadsoft.com/2014/10/getting-started-with-etw-using-nets-eventsource/).
 
 ## Powered by Resharper 
-![Resharper](https://raw.githubusercontent.com/ohadschn/ET4W/master/docs/icon_ReSharper.png)
+[![Resharper](https://raw.githubusercontent.com/ohadschn/ET4W/master/docs/icon_ReSharper.png)](https://www.jetbrains.com/resharper/)
