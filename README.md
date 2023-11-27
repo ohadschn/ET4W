@@ -5,7 +5,8 @@ ET4W is a [T4 Text Template](https://msdn.microsoft.com/en-us/library/bb126445.a
 
 By authoring a simple JSON file, you hit the ground running with full-fledged [`EventSource`](https://msdn.microsoft.com/en-us/library/system.diagnostics.tracing.eventsource(v=vs.110).aspx) classes, generated using [ETW best practices](http://blogs.msmvps.com/kathleen/2014/01/24/how-are-event-parameters-best-used-to-create-an-intuitive-custom-evnetsourcetrace/). These classes are further wrapped in helper classes that support custom types and common parameters, ready for immediate logging.
 
-A full [JSON schema](https://github.com/ohadschn/ET4W/blob/master/src/events-schema.json) is included for in-editor validation and auto-completion (supported in Visual Studio and other editors). Further validation takes place at generation time.
+A full [JSON schema](https://github.com/ohadschn/ET4W/blob/master/src/events-schema.json) is included for in-editor validation and auto-completion (supported in Visual Studio and other editors). 
+Further validation takes place at generation time.
 
 ![JSON editing experience](https://raw.githubusercontent.com/ohadschn/ET4W/master/docs/Transformation.png)
 
